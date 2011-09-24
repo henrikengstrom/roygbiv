@@ -1,0 +1,16 @@
+project/boot/
+
+target
+logs
+
+.DS_Store
+*.iws
+*.ipr
+*.iml
+.project
+.settings
+.classpath
+.idea
+.hide
+.target
+
