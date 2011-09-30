@@ -18,14 +18,15 @@ package roygbiv.http
 import akka.http.{RootEndpoint, Endpoint, RequestMethod, Get}
 import akka.actor.{ActorRef, Actor}
 import akka.actor.Actor._
+import akka.event.EventHandler
 
 object EndpointURI {
   final val ServiceQualifierUri = "/roygbiv"
   final val PingServiceUri = ServiceQualifierUri + "/ping"
+  final val RenderServiceUri = ServiceQualifierUri + "/render"
 }
 
 class RoygbivEndpoint   extends Actor with Endpoint {
-
   import EndpointURI._
 
   override def preStart() = {
@@ -36,16 +37,22 @@ class RoygbivEndpoint   extends Actor with Endpoint {
   def receive = handleHttpRequest
 
   def hook(uri: String): Boolean = {
-    (uri ne null) && (uri == PingServiceUri)
+    (uri ne null) &&
+      ((uri == PingServiceUri) ||
+      (uri.startsWith(RenderServiceUri)))
   }
 
   def provide(uri: String): ActorRef = {
     if (uri == PingServiceUri) {
       pingResource
+    } else if (uri.startsWith(RenderServiceUri)) {
+      renderResource
     } else {
-      throw new IllegalArgumentException("Unkown URI: " + uri)
+      EventHandler.debug(this, "Could not find any uri matching [%s]".format(uri))
+      throw new IllegalArgumentException("Could not find any uri matching [%s]".format(uri))
     }
   }
 
   val pingResource = actorOf[PingResource].start()
+  val renderResource = actorOf[RenderResource].start()
 }

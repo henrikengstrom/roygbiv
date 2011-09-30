@@ -15,4 +15,8 @@
 */
 package roygbiv.scene
 
-class Loader {}
+import akka.actor.Actor
+
+class Loader extends Actor {
+  def receive = null
+}
