@@ -63,7 +63,7 @@ To run the system from inside IDEA you do the following:
 3. Enter the following information:
    Name: "roygbiv"
    Main class: akka.kernel.Main
-   VM parameters: <your_project_on_disk>/src/main/config/akka.conf
+   VM parameters: -Dakka.config=<your_project_on_disk>/src/main/config/akka.conf
    Working directory:
    Use classpath and JDK from project: roygbiv
    Before launch: Select SBT and "compile" as target
