@@ -13,15 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.material
 
+package roygbiv.bxdf
+
+import roygbiv.math.Vector3f
 import roygbiv.color.RGBColor
-import roygbiv.bxdf.{BSDF, LambertianBSDF}
 
-case class DiffuseMaterial(override val name: String, override val id: String, color: RGBColor)
-  extends Material(name, id) {
+case class BSDFSample(wo: Vector3f, pdf: Float, color: RGBColor)
 
-  final private val bsdf = LambertianBSDF(color)
-
-  def getBSDF: BSDF = bsdf
+trait BSDF {
+  def sampleF(wi: Vector3f, normal: Vector3f, u1: Float, u2: Float): BSDFSample
+  def f(wi: Vector3f, wo: Vector3f, normal: Vector3f): RGBColor
+  def rho: RGBColor
+  def hasDeltaDistribution: Boolean = false
+  def pdf(wi: Vector3f, wo: Vector3f, normal: Vector3f): Float
 }

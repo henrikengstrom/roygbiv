@@ -15,13 +15,8 @@
 */
 package roygbiv.material
 
-import roygbiv.color.RGBColor
-import roygbiv.bxdf.{BSDF, LambertianBSDF}
+import roygbiv.bxdf.BSDF
 
-case class DiffuseMaterial(override val name: String, override val id: String, color: RGBColor)
-  extends Material(name, id) {
-
-  final private val bsdf = LambertianBSDF(color)
-
-  def getBSDF: BSDF = bsdf
+abstract class Material(val name: String, val id: String) {
+  def getBSDF: BSDF
 }

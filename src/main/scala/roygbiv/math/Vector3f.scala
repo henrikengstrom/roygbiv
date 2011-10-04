@@ -20,6 +20,10 @@ package roygbiv.math
  */
 case class Vector3f(x: Float, y: Float, z: Float) {
 
+  def this(point: Point3f) = {
+    this(point.x, point.y, point.z)
+  }
+
   def length(): Float = {
     scala.math.sqrt(lengthSquared).asInstanceOf[Float]
   }
@@ -45,6 +49,10 @@ case class Vector3f(x: Float, y: Float, z: Float) {
     Vector3f(x - v.x, y - v.y, z - v.z)
   }
 
+  def unary_- : Vector3f = {
+    Vector3f(-x, -y, -z)
+  }
+
   def *(f: Float): Vector3f = {
     Vector3f(f * x, f * y, f * z)
   }
@@ -60,7 +68,7 @@ object Vector3f {
   def cross(v1: Vector3f, v2: Vector3f): Vector3f = {
     val x = (v1.y * v2.z) - (v1.z * v2.y)
     val y = (v2.x * v1.z) - (v2.z * v1.x)
-    val z = (v1.x * v2.y) - (v1.y*v2.x)
+    val z = (v1.x * v2.y) - (v1.y * v2.x)
     Vector3f(x, y, z)
   }
 
