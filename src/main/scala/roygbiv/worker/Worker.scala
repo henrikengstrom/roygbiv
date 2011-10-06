@@ -15,35 +15,50 @@
 */
 package roygbiv.worker
 
-import akka.actor.Actor
 import akka.dispatch.Dispatchers
 import roygbiv.scene.Scene
 import akka.event.EventHandler
+import akka.actor.{ActorRef, Actor}
+import roygbiv.common.WorkResult
 
 case object Stop
 
-class Worker extends Actor {
+case object ContinueQuestion
+
+class Worker(aggregator: ActorRef) extends Actor {
+  // TODO : Improve id!!!
+  val id = "worker" + System.currentTimeMillis
+
   self.dispatcher = Worker.WorkerDispatcher
   var continue = true
+  var scene: Option[Scene] = None
 
   def receive = {
-    case scene: Scene =>
+    case s: Scene =>
       EventHandler.debug(this, "Starting to work on scene [%s]".format(scene))
-      calculate(scene)
+      scene = Some(s)
+      calculate
     case Stop => continue = false
+    case ContinueQuestion => if (continue) calculate
     case unknown => EventHandler.warning(this, "Unknown message: " + unknown)
   }
 
-  def calculate(scene: Scene) = {
+  def calculate = {
     // This is where the magic happens
+    // TODO : used to simulate workload
+    for (i <- 1 to 10000000) {}
+    aggregator ! WorkResult(id)
+    self ! ContinueQuestion
   }
 }
 
 object Worker {
+  val availableProcessors = Runtime.getRuntime.availableProcessors
+
   // Create dedicated dispatcher for workers.
   // Since we want to minimize context switching in threads to maximize output from CPU during the
   // rendering of an image the number of available threads in the dispatcher = number of available processors
   lazy val WorkerDispatcher = Dispatchers.newExecutorBasedEventDrivenDispatcher("worker-dispatcher")
-    .setCorePoolSize(Runtime.getRuntime.availableProcessors)
+    .setCorePoolSize(availableProcessors)
     .build
 }

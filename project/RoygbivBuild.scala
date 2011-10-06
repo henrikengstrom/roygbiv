@@ -35,7 +35,7 @@ object RoygbivBuild extends Build {
 object Dependencies {
   import Dependency._
 
-  val roygbiv = Seq(akkaKernel, akkaRemote, slf4j, scalatest, junit)
+  val roygbiv = Seq(akkaKernel, akkaRemote, slf4j, logback, scalatest, junit)
 }
 
 object Dependency {
@@ -45,11 +45,13 @@ object Dependency {
     val Scalatest = "1.6.1"
     val Slf4j     = "1.6.0"
     val JUnit     = "4.5"
+    val Logback   = "0.9.24"
   }
 
   val akkaKernel	  = "se.scalablesolutions.akka" % "akka-kernel"        % Version.Akka
   val akkaRemote    = "se.scalablesolutions.akka" % "akka-remote"        % Version.Akka
   val slf4j         = "org.slf4j"                 % "slf4j-api"          % Version.Slf4j
+  val logback       = "ch.qos.logback"            % "logback-classic"    % Version.Logback
 
   // ---- Test dependencies ----
 
