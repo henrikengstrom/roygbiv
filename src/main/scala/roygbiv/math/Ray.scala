@@ -1,5 +1,5 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,14 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.shape
+package roygbiv.math
 
-import roygbiv.math.{Ray, Vector3f, Point3f}
-import roygbiv.material.Material
-
-class Disc extends Shape {
-  def getArea: Float = null.asInstanceOf[Float]
-  def getMaterial: Material = null
-  def intersect(ray: Ray): (Boolean, Intersection) = (false, null)
-  def getNormalAtPoint(point: Point3f): Vector3f = null
+case class Ray(val origin: Point3f, val direction: Vector3f) {
+  def getPointAtT(t: Float): Point3f = {
+    origin + direction * t
+  }
 }

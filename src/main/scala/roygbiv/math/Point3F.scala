@@ -35,6 +35,10 @@ case class Point3f(x: Float, y: Float, z: Float) {
     Point3f(x + p.x, y + p.y, z + p.z)
   }
 
+  def +(v: Vector3f): Point3f = {
+    Point3f(x + v.x, y + v.y, z + v.z)
+  }
+
   def -(p: Point3f): Point3f = {
     Point3f(x - p.x, y - p.y, z - p.z)
   }

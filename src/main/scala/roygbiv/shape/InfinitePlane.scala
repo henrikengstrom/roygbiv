@@ -15,4 +15,12 @@
 */
 package roygbiv.shape
 
-class InfinitePlane extends Shape {}
+import roygbiv.math.{Ray, Vector3f, Point3f}
+import roygbiv.material.Material
+
+class InfinitePlane extends Shape {
+  def getArea: Float = null.asInstanceOf[Float]
+  def getMaterial: Material = null
+  def intersect(ray: Ray): (Boolean, Intersection) = (false, null)
+  def getNormalAtPoint(point: Point3f): Vector3f = null
+}

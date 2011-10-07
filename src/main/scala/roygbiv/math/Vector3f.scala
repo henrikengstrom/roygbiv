@@ -20,7 +20,7 @@ package roygbiv.math
  */
 case class Vector3f(x: Float, y: Float, z: Float) {
 
-  def this(point: Point3f) = {
+  def this(point: Point3f) {
     this(point.x, point.y, point.z)
   }
 
@@ -64,6 +64,8 @@ case class Vector3f(x: Float, y: Float, z: Float) {
 }
 
 object Vector3f {
+
+  def apply(point: Point3f) = new Vector3f(point)
 
   def cross(v1: Vector3f, v2: Vector3f): Vector3f = {
     val x = (v1.y * v2.z) - (v1.z * v2.y)

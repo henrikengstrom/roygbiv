@@ -18,10 +18,12 @@ package roygbiv.math
 object MathUtils {
   import roygbiv.math.Vector3f._
 
-  val up = Vector3f(0.004239838f, 0.9999618f, 0.007639708f)
+  private val up = Vector3f(0.004239838f, 0.9999618f, 0.007639708f)
   val InvPi = (1.0D / scala.math.Pi).asInstanceOf[Float]
   val TwoPi = (2.0D * scala.math.Pi).asInstanceOf[Float]
   val InvTwoPi = (1.0D / (2.0D * scala.math.Pi)).asInstanceOf[Float]
+  val Epsilon = 1.0000000000000001E-005f
+  val MaxDistance = 100000000.0f
 
   def cosineSampleHemisphere(normal: Vector3f, u1: Float, u2: Float): Vector3f = {
     val sinPolar = scala.math.sqrt(1.0D - u1)
