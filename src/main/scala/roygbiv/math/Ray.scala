@@ -15,8 +15,8 @@
 */
 package roygbiv.math
 
-case class Ray(val origin: Point3f, val direction: Vector3f) {
-  def getPointAtT(t: Float): Point3f = {
+case class Ray(val origin: Tuple3f, val direction: Tuple3f) {
+  def getPointAtT(t: Float): Tuple3f = {
     origin + direction * t
   }
 }

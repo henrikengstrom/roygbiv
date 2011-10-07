@@ -16,21 +16,21 @@
 package roygbiv.bxdf
 
 import roygbiv.color.RGBColor
-import roygbiv.math.{MathUtils, Vector3f}
+import roygbiv.math.{MathUtils, Tuple3f}
 
 case class LambertianBSDF(color: RGBColor) extends BSDF {
   private final val preScaledColor = color * MathUtils.InvPi
 
-  def sampleF(wi: Vector3f, normal: Vector3f, u1: Float, u2: Float): BSDFSample = {
+  def sampleF(wi: Tuple3f, normal: Tuple3f, u1: Float, u2: Float): BSDFSample = {
     val wo = MathUtils.cosineSampleHemisphere(normal, u1, u2)
     BSDFSample(wo, pdf(wi, wo, normal), preScaledColor)
   }
 
-  def f(wi: Vector3f, wo: Vector3f, normal: Vector3f): RGBColor = preScaledColor
+  def f(wi: Tuple3f, wo: Tuple3f, normal: Tuple3f): RGBColor = preScaledColor
 
   def rho: RGBColor = color
 
-  def pdf(wi: Vector3f, wo: Vector3f, normal: Vector3f): Float = {
+  def pdf(wi: Tuple3f, wo: Tuple3f, normal: Tuple3f): Float = {
     normal.dot(wo) * MathUtils.InvPi
   }
 }

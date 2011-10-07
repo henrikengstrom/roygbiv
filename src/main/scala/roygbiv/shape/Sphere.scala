@@ -16,18 +16,18 @@
 package roygbiv.shape
 
 import roygbiv.material.Material
-import roygbiv.math.{MathUtils, Ray, Vector3f, Point3f}
+import roygbiv.math.{MathUtils, Ray, Tuple3f}
 
-case class Sphere(center: Point3f, radius: Float, material: Material) extends Shape {
-  private val radiusSquared = radius * radius
-  private val area = (4.0D * radiusSquared * scala.math.Pi).asInstanceOf[Float]
+case class Sphere(center: Tuple3f, radius: Float, material: Material) extends Shape {
+  val radiusSquared = radius * radius
+  val area = (4.0D * radiusSquared * scala.math.Pi).asInstanceOf[Float]
 
   def getArea: Float = area
 
   def getMaterial: Material = material
 
-  def intersect(ray: Ray): (Boolean, Intersection) = {
-    val v = Vector3f(ray.origin - center)
+  def intersect(ray: Ray): Option[Intersection] = {
+    val v = ray.origin - center
     val b = -v.dot(ray.direction)
     var discriminant = (b * b) - v.dot(v) + radiusSquared
 
@@ -39,20 +39,20 @@ case class Sphere(center: Point3f, radius: Float, material: Material) extends Sh
       if (i2 > 0.0f) {
         if (i1 < 0.0f) {
           if (i2 < MathUtils.MaxDistance) {
-            (true, Intersection(i2, ray.getPointAtT(i2), this))
+            Some(Intersection(i2, ray.getPointAtT(i2), this))
           }
         } else {
           if (i1 < MathUtils.MaxDistance) {
-            (true, Intersection(i1, ray.getPointAtT(i1), this))
+            Some(Intersection(i1, ray.getPointAtT(i1), this))
           }
         }
       }
     }
 
-    (false, null)
+    None
   }
 
-  def getNormalAtPoint(point: Point3f): Vector3f = {
-    Vector3f(point - center).normalize()
+  def getNormalAtPoint(point: Tuple3f): Tuple3f = {
+    (point - center).normalize()
   }
 }

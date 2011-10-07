@@ -16,14 +16,14 @@
 package roygbiv.shape
 
 import roygbiv.material.Material
-import roygbiv.math.{Vector3f, Ray, Point3f}
+import roygbiv.math.{Tuple3f, Ray}
 
 /**
  * Class representing an intersection of a ray with a shape
  */
-case class Intersection(t: Float, point: Point3f, shape: Shape)
+case class Intersection(t: Float, point: Tuple3f, shape: Shape)
 {
-  def normal: Vector3f = {
+  def normal: Tuple3f = {
     shape.getNormalAtPoint(point)
   }
 }
@@ -34,6 +34,6 @@ case class Intersection(t: Float, point: Point3f, shape: Shape)
 trait Shape {
   def getArea: Float
   def getMaterial: Material
-  def intersect(ray: Ray): (Boolean, Intersection)
-  def getNormalAtPoint(point: Point3f): Vector3f
+  def intersect(ray: Ray): Option[Intersection]
+  def getNormalAtPoint(point: Tuple3f): Tuple3f
 }

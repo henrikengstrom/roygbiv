@@ -19,12 +19,12 @@ import org.scalatest.matchers.MustMatchers
 import org.scalatest.WordSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class Point3fSpec extends WordSpec with MustMatchers {
-  "A Point3f" must {
+class Tuple3fSpec extends WordSpec with MustMatchers {
+  "A Tuple3f" must {
     "add" in {
-      val p1 = Point3f(1, 2, 3)
-      val p2 = Point3f(1, 2, 3)
-      val p3 = p1.+(p2)
+      val p1 = Tuple3f(1, 2, 3)
+      val p2 = Tuple3f(1, 2, 3)
+      val p3 = p1 + p2
       p3.x must equal (2)
       p3.y must equal (4)
       p3.z must equal (6)
@@ -36,8 +36,8 @@ class Point3fSpec extends WordSpec with MustMatchers {
     }
 
     "subtract" in {
-      val p1 = Point3f(1, 1, 1)
-      val p2 = Point3f(1, 1, 1)
+      val p1 = Tuple3f(1, 1, 1)
+      val p2 = Tuple3f(1, 1, 1)
       val p3 = p1 - p2
       p3.x must equal (0)
       p3.y must equal (0)
@@ -45,9 +45,9 @@ class Point3fSpec extends WordSpec with MustMatchers {
     }
 
     "use equality correctly" in {
-      val p1 = Point3f(2, 3, 4)
-      val p2 = Point3f(2, 3, 4)
-      val p3 = Point3f(3, 4, 5)
+      val p1 = Tuple3f(2, 3, 4)
+      val p2 = Tuple3f(2, 3, 4)
+      val p3 = Tuple3f(3, 4, 5)
       p1 == p1 must be (true)
       p1 == p2 must be (true)
       p1 == p3 must be (false)

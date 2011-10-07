@@ -16,15 +16,15 @@
 
 package roygbiv.bxdf
 
-import roygbiv.math.Vector3f
+import roygbiv.math.Tuple3f
 import roygbiv.color.RGBColor
 
-case class BSDFSample(wo: Vector3f, pdf: Float, color: RGBColor)
+case class BSDFSample(wo: Tuple3f, pdf: Float, color: RGBColor)
 
 trait BSDF {
-  def sampleF(wi: Vector3f, normal: Vector3f, u1: Float, u2: Float): BSDFSample
-  def f(wi: Vector3f, wo: Vector3f, normal: Vector3f): RGBColor
+  def sampleF(wi: Tuple3f, normal: Tuple3f, u1: Float, u2: Float): BSDFSample
+  def f(wi: Tuple3f, wo: Tuple3f, normal: Tuple3f): RGBColor
   def rho: RGBColor
   def hasDeltaDistribution: Boolean = false
-  def pdf(wi: Vector3f, wo: Vector3f, normal: Vector3f): Float
+  def pdf(wi: Tuple3f, wo: Tuple3f, normal: Tuple3f): Float
 }
