@@ -1,5 +1,5 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.material
+package roygbiv.shape
 
 import roygbiv.color.RGBColor
-import roygbiv.bxdf.{BSDF, LambertianBSDF}
+import roygbiv.math.Tuple3f
 
-case class DiffuseMaterial(id: String, name: String, color: RGBColor) extends Material {
-
-  val bsdf = LambertianBSDF(color)
-
-  def getBSDF: BSDF = bsdf
+trait Emitter {
+  def le: RGBColor
+  def isDeltaLight: Boolean = false
+  def getSample(u1: Float, u2: Float): LightSample
+  def pdf: Float
 }
+
+case class LightSample(point: Tuple3f, normal: Tuple3f, l: RGBColor, pdf: Float)

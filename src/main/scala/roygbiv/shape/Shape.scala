@@ -21,8 +21,7 @@ import roygbiv.math.{Tuple3f, Ray}
 /**
  * Class representing an intersection of a ray with a shape
  */
-case class Intersection(t: Float, point: Tuple3f, shape: Shape)
-{
+case class Intersection(t: Float, point: Tuple3f = null, shape: Shape = null) {
   def normal: Tuple3f = {
     shape.getNormalAtPoint(point)
   }
@@ -32,8 +31,8 @@ case class Intersection(t: Float, point: Tuple3f, shape: Shape)
  * Base class for shapes
  */
 trait Shape {
-  def getArea: Float
-  def getMaterial: Material
+  def area: Float
   def intersect(ray: Ray): Option[Intersection]
   def getNormalAtPoint(point: Tuple3f): Tuple3f
 }
+

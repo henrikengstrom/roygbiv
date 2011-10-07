@@ -52,11 +52,11 @@ case class Tuple3f(x: Float, y: Float, z: Float) {
     (dx * dx) + (dy * dy) + (dz * dz)
   }
 
-  def length(): Float = {
+  def length: Float = {
     scala.math.sqrt(lengthSquared).asInstanceOf[Float]
   }
 
-  def lengthSquared(): Float = {
+  def lengthSquared: Float = {
     (x * x) + (y * y) + (z * z)
   }
 
@@ -64,7 +64,7 @@ case class Tuple3f(x: Float, y: Float, z: Float) {
     (x * t.x) + (y * t.y) + (z * t.z)
   }
 
-  def normalize(): Tuple3f = {
+  def normalize: Tuple3f = {
     val n = (1.0 / scala.math.sqrt((x * x) + (y * y) + (z * z))).asInstanceOf[Float]
     Tuple3f(x * n, y * n, z * n)
   }

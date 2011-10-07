@@ -16,11 +16,9 @@
 package roygbiv.shape
 
 import roygbiv.math.{Ray, Tuple3f}
-import roygbiv.material.Material
 
 class Disc extends Shape {
-  def getArea: Float = null.asInstanceOf[Float]
-  def getMaterial: Material = null
+  def area: Float = null.asInstanceOf[Float]
   def intersect(ray: Ray): Option[Intersection] = None
   def getNormalAtPoint(point: Tuple3f): Tuple3f = null
 }

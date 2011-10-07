@@ -13,14 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.material
+package roygbiv.acceleration
 
-import roygbiv.color.RGBColor
-import roygbiv.bxdf.{BSDF, LambertianBSDF}
+import roygbiv.math.Ray
+import roygbiv.shape.{Intersection, Shape}
 
-case class DiffuseMaterial(id: String, name: String, color: RGBColor) extends Material {
-
-  val bsdf = LambertianBSDF(color)
-
-  def getBSDF: BSDF = bsdf
+trait Accelerator {
+  def addShape(shape: Shape): Unit
+  def intersect(ray: Ray): Option[Intersection]
 }

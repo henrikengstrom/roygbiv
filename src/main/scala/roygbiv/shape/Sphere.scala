@@ -15,16 +15,16 @@
 */
 package roygbiv.shape
 
-import roygbiv.material.Material
 import roygbiv.math.{MathUtils, Ray, Tuple3f}
 
-case class Sphere(center: Tuple3f, radius: Float, material: Material) extends Shape {
-  val radiusSquared = radius * radius
-  val area = (4.0D * radiusSquared * scala.math.Pi).asInstanceOf[Float]
+trait Sphere extends Shape {
+  lazy val radiusSquared = radius * radius
 
-  def getArea: Float = area
+  lazy val area = (4.0D * radiusSquared * scala.math.Pi).asInstanceOf[Float]
 
-  def getMaterial: Material = material
+  def center: Tuple3f
+
+  def radius: Float
 
   def intersect(ray: Ray): Option[Intersection] = {
     val v = ray.origin - center
@@ -53,6 +53,6 @@ case class Sphere(center: Tuple3f, radius: Float, material: Material) extends Sh
   }
 
   def getNormalAtPoint(point: Tuple3f): Tuple3f = {
-    (point - center).normalize()
+    (point - center).normalize
   }
 }

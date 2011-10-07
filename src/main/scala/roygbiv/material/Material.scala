@@ -17,6 +17,8 @@ package roygbiv.material
 
 import roygbiv.bxdf.BSDF
 
-abstract class Material(val name: String, val id: String) {
+trait Material {
+  def id: String
+  def name: String
   def getBSDF: BSDF
 }

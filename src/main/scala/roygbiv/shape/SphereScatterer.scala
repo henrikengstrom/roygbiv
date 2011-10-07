@@ -1,5 +1,5 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.acceleration
+package roygbiv.shape
 
-class NoneAcceleration extends Acceleration {}
+import roygbiv.math.Tuple3f
+import roygbiv.material.Material
+
+case class SphereScatterer(center: Tuple3f, radius: Float, material: Material) extends Sphere with Scatterer

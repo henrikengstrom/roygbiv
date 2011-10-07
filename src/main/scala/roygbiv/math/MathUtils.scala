@@ -32,7 +32,7 @@ object MathUtils {
     val cosAzimuth = scala.math.cos(azimuth)
     val sinAzimuth = scala.math.sin(azimuth)
 
-    val u = cross(up, normal).normalize()
+    val u = cross(up, normal).normalize
     val v = cross(normal, u)
     val w = Tuple3f((cosAzimuth * sinPolar).asInstanceOf[Float],
                      (sinAzimuth * sinPolar).asInstanceOf[Float],
@@ -40,6 +40,6 @@ object MathUtils {
 
     Tuple3f((w.x * u.x) + (w.y * v.x) + (w.z * normal.x),
             (w.x * u.y) + (w.y * v.y) + (w.z * normal.y),
-            (w.x * u.z) + (w.y * v.z) + (w.z * normal.z)).normalize()
+            (w.x * u.z) + (w.y * v.z) + (w.z * normal.z)).normalize
   }
 }

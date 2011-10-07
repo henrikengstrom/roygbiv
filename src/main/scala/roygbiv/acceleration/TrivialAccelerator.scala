@@ -15,4 +15,26 @@
 */
 package roygbiv.acceleration
 
-trait Acceleration {}
+import roygbiv.shape.{Shape, Intersection}
+import roygbiv.math.{MathUtils, Ray}
+
+class TrivialAccelerator extends Accelerator {
+  var shapes = List[Shape]()
+
+  def addShape(shape: Shape) = {
+    shapes = shape :: shapes
+  }
+
+  def intersect(ray: Ray): Option[Intersection] = {
+    var intersection: Intersection = Intersection(MathUtils.MaxDistance)
+
+    for (shape <- shapes) {
+      shape.intersect(ray) match {
+        case Some(i) => if (i.t < intersection.t) intersection = i
+        case None =>
+      }
+    }
+
+    if (intersection.t == MathUtils.MaxDistance) None else Some(intersection)
+  }
+}
