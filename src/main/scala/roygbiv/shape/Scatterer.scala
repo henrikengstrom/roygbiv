@@ -17,6 +17,6 @@ package roygbiv.shape
 
 import roygbiv.material.Material
 
-trait Scatterer {
+trait Scatterer extends Shape {
   def material: Material
 }

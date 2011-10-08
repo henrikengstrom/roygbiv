@@ -16,10 +16,24 @@
 package roygbiv.scene
 
 import roygbiv.acceleration.Accelerator
-import roygbiv.camera.Camera
-import roygbiv.shape.{Emitter, Shape}
+import roygbiv.math.Ray
+import roygbiv.shape.{Intersection, Emitter, Shape}
+import roygbiv.camera.{PinholeCamera, Camera}
 
-case class Scene(name: String, accelerator: Accelerator, camera: Camera) {
-  def addShape(shape: Shape) = {}
-  def addEmitter(emitter: Emitter) = {}
+case class Scene(name: String, accelerator: Accelerator, camera: PinholeCamera) {
+  var emitters = List[Emitter]()
+
+  def addShape(shape: Shape) = {
+    accelerator.addShape(shape)
+  }
+
+  def addEmitter(emitter: Emitter) = {
+    accelerator.addShape(emitter)
+    emitters = emitter :: emitters
+  }
+
+  def intersect(ray: Ray): Option[Intersection] = {
+    accelerator.intersect(ray)
+  }
+
 }

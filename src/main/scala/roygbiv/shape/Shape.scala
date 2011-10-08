@@ -15,7 +15,6 @@
 */
 package roygbiv.shape
 
-import roygbiv.material.Material
 import roygbiv.math.{Tuple3f, Ray}
 
 /**

@@ -15,4 +15,6 @@
 */
 package roygbiv.common
 
-case class WorkResult(workerId: String)
+import roygbiv.color.RGBColor
+
+case class WorkResult(workerId: String, result: Seq[RGBColor])

@@ -20,7 +20,7 @@ import roygbiv.camera.PinholeCamera
 import roygbiv.math.Tuple3f
 import roygbiv.material.DiffuseMaterial
 import roygbiv.color.RGBColor
-import roygbiv.shape.{SphereEmitter, SphereScatterer}
+import roygbiv.shape.{DiscScatterer, SphereEmitter, SphereScatterer}
 
 case class JsonSceneLoader(location: String, encoding: String) extends SceneLoader {
   def loadScene: Scene = {
@@ -35,11 +35,16 @@ case class JsonSceneLoader(location: String, encoding: String) extends SceneLoad
 
     val sphereMaterial = DiffuseMaterial("m1", "sphere_material", RGBColor(0.5f, 0.5f, 0.9f))
     val planeMaterial = DiffuseMaterial("m2", "plane_material", RGBColor(0.5f, 0.5f, 0.5f))
+    val planeMaterial2 = DiffuseMaterial("m2", "plane_material", RGBColor(0.1f, 0.6f, 0.2f))
 
     val sphereScatterer = SphereScatterer(Tuple3f(0.0f, 0.5f, 0.0f), 0.5f, sphereMaterial)
+    val discScatterer = DiscScatterer(Tuple3f(1.0f, 0.5f, 0.0f), 0.5f, Tuple3f(0.0f, 0.0f, 1.0f), planeMaterial)
+    val discScatterer2 = DiscScatterer(Tuple3f(0.0f, 0.0f, 0.0f), 12.5f, Tuple3f(0.0f, 1.0f, 0.0f), planeMaterial2)
     val sphereEmitter = SphereEmitter(Tuple3f(0.0f, 1.5f, 0.0f), 0.5f, RGBColor(1.0f, 0.6f, 0.2f), 1.0f)
 
     scene.addShape(sphereScatterer)
+    scene.addShape(discScatterer)
+    scene.addShape(discScatterer2)
     scene.addEmitter(sphereEmitter)
     scene
   }

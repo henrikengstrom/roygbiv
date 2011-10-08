@@ -15,4 +15,25 @@
 */
 package roygbiv.integrator
 
-class UnidirectionalPathIntegrator {}
+import roygbiv.color.RGBColor
+import roygbiv.scene.Scene
+import roygbiv.shape.{Emitter, Scatterer}
+
+case class UnidirectionalPathIntegrator(scene: Scene) {
+  val camera = scene.camera
+
+  def l(pixelX: Float, pixelY: Float): RGBColor = {
+    val ray = camera.getRayForPixel(pixelX, pixelY)
+
+    scene.intersect(ray) match {
+      case Some(i) => i match {
+        case s: Scatterer =>
+          s.material.getBSDF.rho
+        case e: Emitter =>
+          e.le
+      }
+      case None => RGBColor.Black
+    }
+  }
+
+}

@@ -18,9 +18,8 @@ package roygbiv.shape
 import roygbiv.color.RGBColor
 import roygbiv.math.Tuple3f
 
-trait Emitter {
+trait Emitter extends Shape {
   def le: RGBColor
-  def isDeltaLight: Boolean = false
   def getSample(u1: Float, u2: Float): LightSample
   def pdf: Float
 }

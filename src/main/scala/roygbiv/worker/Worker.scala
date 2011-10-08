@@ -20,6 +20,9 @@ import roygbiv.scene.Scene
 import akka.event.EventHandler
 import akka.actor.{ActorRef, Actor}
 import roygbiv.common.WorkResult
+import roygbiv.integrator.UnidirectionalPathIntegrator
+import collection.mutable.ArrayBuffer
+import roygbiv.color.RGBColor
 
 case object Stop
 
@@ -27,11 +30,14 @@ case object ContinueQuestion
 
 class Worker(aggregator: ActorRef) extends Actor {
   // TODO : Improve id!!!
-  val id = "worker" + System.currentTimeMillis
+  val id = "worker" + Thread.currentThread.getId
 
   self.dispatcher = Worker.WorkerDispatcher
   var continue = true
   var scene: Option[Scene] = None
+  val imageWidth = scene.get.camera.screenWidth
+  val imageHeight = scene.get.camera.screenHeight
+  val integrator = UnidirectionalPathIntegrator(scene.get)
 
   def receive = {
     case s: Scene =>
@@ -45,9 +51,16 @@ class Worker(aggregator: ActorRef) extends Actor {
 
   def calculate = {
     // This is where the magic happens
-    // TODO : used to simulate workload
-    for (i <- 1 to 10000000) {}
-    aggregator ! WorkResult(id)
+    val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
+
+    for {
+      x <- 0 until imageWidth;
+      y <- 0 until imageHeight
+    } yield {
+      buffer(x + y * imageWidth) = integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+    }
+
+    aggregator ! WorkResult(id,  buffer.toSeq)
     self ! ContinueQuestion
   }
 }

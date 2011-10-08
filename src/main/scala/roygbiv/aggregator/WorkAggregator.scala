@@ -19,11 +19,19 @@ import roygbiv.common.WorkResult
 import akka.actor._
 import java.util.concurrent.{ScheduledFuture, TimeUnit}
 import akka.event.EventHandler
+import collection.mutable.ArrayBuffer
+import roygbiv.color.RGBColor
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
+import java.io.File
 
 case object GenerateImage
 
 class WorkAggregator extends Actor {
   var scheduled: Option[ScheduledFuture[_]] = None
+  var buffer = new ArrayBuffer[RGBColor]()
+  val width = 1024
+  val height = 768
 
   var resultCounter = 0
 
@@ -43,14 +51,25 @@ class WorkAggregator extends Actor {
     case GenerateImage => generateImage()
   }
 
-  def applyResult(result: WorkResult) {
+  def applyResult(workResult: WorkResult) {
+    if (buffer.isEmpty) buffer = new ArrayBuffer[RGBColor](workResult.result.size)
+
+    // TODO : improve this logic
+    var counter = 0
+    workResult.result.foreach({color =>
+      buffer(counter) = buffer(counter) + color
+      counter += 1
+    })
+
     resultCounter += 1
-    EventHandler.debug(this, "Applying result from worker [%s], total calculated items: [%s]".format(resultCounter, result.workerId))
-    // TODO : Apply this result to the existing result
+    EventHandler.debug(this, "Applying result from worker [%s], total calculated items: [%s]".format(resultCounter, workResult.workerId))
   }
 
   def generateImage() {
+    val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    image.setRGB(0, 0, width, height, buffer.map(color => color.asInt).toArray, 0, width)
+    val file = new File("img_" + System.currentTimeMillis + "_" + resultCounter + ".png")
+    ImageIO.write(image, "png", file)
     EventHandler.debug(this, "*** Generating image ***")
-    // TODO : Persist image
   }
 }
