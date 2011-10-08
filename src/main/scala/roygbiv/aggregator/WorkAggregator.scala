@@ -52,24 +52,36 @@ class WorkAggregator extends Actor {
   }
 
   def applyResult(workResult: WorkResult) {
-    if (buffer.isEmpty) buffer = new ArrayBuffer[RGBColor](workResult.result.size)
-
     // TODO : improve this logic
     var counter = 0
-    workResult.result.foreach({color =>
-      buffer(counter) = buffer(counter) + color
-      counter += 1
-    })
+    if (buffer.isEmpty) {
+      buffer = new ArrayBuffer[RGBColor](workResult.result.size)
+      workResult.result.foreach({
+        color =>
+          buffer += color
+          counter += 1
+      })
+
+    } else {
+      workResult.result.foreach({
+        color =>
+          buffer(counter) = buffer(counter) + color
+          counter += 1
+      })
+    }
 
     resultCounter += 1
     EventHandler.debug(this, "Applying result from worker [%s], total calculated items: [%s]".format(resultCounter, workResult.workerId))
   }
 
   def generateImage() {
-    val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-    image.setRGB(0, 0, width, height, buffer.map(color => color.asInt).toArray, 0, width)
-    val file = new File("img_" + System.currentTimeMillis + "_" + resultCounter + ".png")
-    ImageIO.write(image, "png", file)
-    EventHandler.debug(this, "*** Generating image ***")
+    if (!buffer.isEmpty) {
+      val scale = 1.0f/resultCounter
+      val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+      image.setRGB(0, 0, width, height, buffer.map(color => (color * scale).asInt).toArray, 0, width)
+      val file = new File("img_" + System.currentTimeMillis + "_" + resultCounter + ".png")
+      ImageIO.write(image, "png", file)
+      EventHandler.debug(this, "*** Generating image ***")
+    }
   }
 }

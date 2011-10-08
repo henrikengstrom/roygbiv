@@ -35,9 +35,6 @@ class Worker(aggregator: ActorRef) extends Actor {
   self.dispatcher = Worker.WorkerDispatcher
   var continue = true
   var scene: Option[Scene] = None
-  val imageWidth = scene.get.camera.screenWidth
-  val imageHeight = scene.get.camera.screenHeight
-  val integrator = UnidirectionalPathIntegrator(scene.get)
 
   def receive = {
     case s: Scene =>
@@ -50,14 +47,18 @@ class Worker(aggregator: ActorRef) extends Actor {
   }
 
   def calculate = {
+    val imageWidth = scene.get.camera.screenWidth
+    val imageHeight = scene.get.camera.screenHeight
+    val integrator = UnidirectionalPathIntegrator(scene.get)
+
     // This is where the magic happens
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
 
     for {
-      x <- 0 until imageWidth;
+      x <- 0 to imageWidth;
       y <- 0 until imageHeight
     } yield {
-      buffer(x + y * imageWidth) = integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
     }
 
     aggregator ! WorkResult(id,  buffer.toSeq)
