@@ -25,6 +25,7 @@ trait Disc extends Shape {
   def normal: Tuple3f
 
   def intersect(ray: Ray): Option[Intersection] = {
+    var result: Option[Intersection] = None
     val incidence = ray.direction.dot(normal)
     val oc = center - ray.origin
     val t = oc.dot(normal) / incidence
@@ -33,11 +34,11 @@ trait Disc extends Shape {
       val hitPoint = ray.getPointAtT(t)
 
       if (hitPoint.distanceSquared(center) < radiusSquared) {
-        Some(Intersection(t, hitPoint, this))
+        result = Some(Intersection(t, hitPoint, this))
       }
     }
 
-    None
+    result
   }
 
   def getNormalAtPoint(point: Tuple3f): Tuple3f = normal

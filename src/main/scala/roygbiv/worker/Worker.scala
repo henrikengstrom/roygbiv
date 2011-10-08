@@ -54,11 +54,23 @@ class Worker(aggregator: ActorRef) extends Actor {
     // This is where the magic happens
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
 
+    // TODO - improve!!!
+    /*
     for {
       x <- 0 to imageWidth;
       y <- 0 until imageHeight
     } yield {
-      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+      if (x > 512 && y > 384) {
+        buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+      }
+      buffer += RGBColor.Black
+    }
+    */
+
+    for (x <- 0 until imageWidth) {
+      for (y <- 0 until imageHeight) {
+        buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+      }
     }
 
     aggregator ! WorkResult(id,  buffer.toSeq)

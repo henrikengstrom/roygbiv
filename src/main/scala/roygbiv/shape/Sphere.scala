@@ -27,10 +27,11 @@ trait Sphere extends Shape {
   def radius: Float
 
   def intersect(ray: Ray): Option[Intersection] = {
+    var result: Option[Intersection] = None
     val v = ray.origin - center
     val b = -v.dot(ray.direction)
-    var discriminant = (b * b) - v.dot(v) + radiusSquared
 
+    var discriminant = (b * b) - v.dot(v) + radiusSquared
     if (discriminant > 0.0f) {
       discriminant = scala.math.sqrt(discriminant).asInstanceOf[Float]
       val i1 = b - discriminant
@@ -39,17 +40,17 @@ trait Sphere extends Shape {
       if (i2 > 0.0f) {
         if (i1 < 0.0f) {
           if (i2 < MathUtils.MaxDistance) {
-            Some(Intersection(i2, ray.getPointAtT(i2), this))
+            result = Some(Intersection(i2, ray.getPointAtT(i2), this))
           }
         } else {
           if (i1 < MathUtils.MaxDistance) {
-            Some(Intersection(i1, ray.getPointAtT(i1), this))
+            result = Some(Intersection(i1, ray.getPointAtT(i1), this))
           }
         }
       }
     }
 
-    None
+    result
   }
 
   def getNormalAtPoint(point: Tuple3f): Tuple3f = {
