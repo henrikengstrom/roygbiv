@@ -15,4 +15,8 @@
 */
 package roygbiv.camera
 
-trait Camera {}
+import roygbiv.math.Ray
+
+trait Camera {
+  def getRayForPixel(pixelX: Float, pixelY: Float): Ray
+}
