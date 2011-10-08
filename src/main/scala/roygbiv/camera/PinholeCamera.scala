@@ -20,18 +20,13 @@ import roygbiv.math.{Ray, OrthonormalBasis, Tuple3f}
 case class PinholeCamera(eyeLocation: Tuple3f, target: Tuple3f, upVector: Tuple3f, viewPlaneDistance: Float, screenWidth: Int, screenHeight: Int) extends Camera {
   val invScreenWidth = 1.0f / screenWidth
   val invScreenHeight = 1.0f / screenHeight
-  var viewPlaneWidth = 0.0f
-  var viewPlaneHeight = 0.0f
+  var viewPlaneWidth = 1.0f
+  var viewPlaneHeight = 1.0f
 
   if (screenWidth > screenHeight) {
-    viewPlaneWidth = 1.0f
     viewPlaneHeight = screenHeight.asInstanceOf[Float] / screenWidth
   } else if (screenHeight > screenWidth) {
-    viewPlaneHeight = 1.0f
     viewPlaneWidth = screenWidth.asInstanceOf[Float] / screenHeight
-  } else {
-    viewPlaneWidth = 1.0f
-    viewPlaneHeight = 1.0f
   }
 
   val bu = viewPlaneWidth * 0.5f

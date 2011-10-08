@@ -1,5 +1,5 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-*/
+ */
 package roygbiv.worker
 
 import akka.dispatch.Dispatchers
@@ -54,26 +54,14 @@ class Worker(aggregator: ActorRef) extends Actor {
     // This is where the magic happens
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
 
-    // TODO - improve!!!
-    /*
     for {
-      x <- 0 to imageWidth;
+      x <- 0 until imageWidth;
       y <- 0 until imageHeight
     } yield {
-      if (x > 512 && y > 384) {
-        buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
-      }
-      buffer += RGBColor.Black
-    }
-    */
-
-    for (x <- 0 until imageWidth) {
-      for (y <- 0 until imageHeight) {
-        buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
-      }
+      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
     }
 
-    aggregator ! WorkResult(id,  buffer.toSeq)
+    aggregator ! WorkResult(id, buffer.toSeq)
     self ! ContinueQuestion
   }
 }

@@ -27,10 +27,8 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
 
     scene.intersect(ray) match {
       case Some(i) => i.shape match {
-        case s: Scatterer =>
-          s.material.getBSDF.rho
-        case e: Emitter =>
-          e.le
+        case s: Scatterer => s.material.getBSDF.rho
+        case e: Emitter => e.le
       }
       case None => RGBColor.Black
     }
