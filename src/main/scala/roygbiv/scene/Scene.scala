@@ -15,4 +15,11 @@
 */
 package roygbiv.scene
 
-case class Scene(name: String) {}
+import roygbiv.acceleration.Accelerator
+import roygbiv.camera.Camera
+import roygbiv.shape.{Emitter, Shape}
+
+case class Scene(name: String, accelerator: Accelerator, camera: Camera) {
+  def addShape(shape: Shape) = {}
+  def addEmitter(emitter: Emitter) = {}
+}

@@ -17,10 +17,10 @@ package roygbiv.http
 
 import akka.actor.Actor._
 import akka.http.{RequestMethod, Get}
-import roygbiv.scene.{SceneLoader, LoadScene, Scene}
 import roygbiv.aggregator.WorkAggregator
 import akka.actor.{ActorRef, Actor}
 import roygbiv.worker.{Stop, Worker}
+import roygbiv.scene.{JsonSceneLoader, SceneLoaderOrchestrator, LoadScene, Scene}
 
 class RenderResource extends Actor {
   import RenderResource._
@@ -55,8 +55,9 @@ class RenderResource extends Actor {
   }
 
   def loadScene = {
-    val loader = actorOf[SceneLoader].start()
-    loader ! LoadScene
+    val loader = actorOf[SceneLoaderOrchestrator].start()
+    // TODO : these parameters should, of course, be dynamic and chosen in the REST interface
+    loader ! LoadScene(JsonSceneLoader.SceneType, "src/main/resources/SceneExample.lcj")
   }
 
   def distributeWork(scene: Scene) = {

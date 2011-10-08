@@ -15,19 +15,7 @@
 */
 package roygbiv.scene
 
-import akka.actor.Actor
-
-case object LoadScene
-
-class SceneLoader extends Actor {
-  def receive = {
-    case LoadScene =>
-      val scene = loadScene
-      self.channel ! scene
-    case _ => println("Unknown message type")
-  }
-
-  def loadScene: Scene = {
-    Scene("TEST SCENE")
-  }
+trait SceneLoader {
+  def location: String
+  def loadScene: Scene
 }
