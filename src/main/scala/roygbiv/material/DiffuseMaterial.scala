@@ -19,8 +19,5 @@ import roygbiv.color.RGBColor
 import roygbiv.bxdf.{BSDF, LambertianBSDF}
 
 case class DiffuseMaterial(id: String, name: String, color: RGBColor) extends Material {
-
   val bsdf = LambertianBSDF(color)
-
-  def getBSDF: BSDF = bsdf
 }

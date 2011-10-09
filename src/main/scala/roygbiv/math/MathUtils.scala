@@ -22,11 +22,11 @@ object MathUtils {
   val InvPi = (1.0D / scala.math.Pi).asInstanceOf[Float]
   val TwoPi = (2.0D * scala.math.Pi).asInstanceOf[Float]
   val InvTwoPi = (1.0D / (2.0D * scala.math.Pi)).asInstanceOf[Float]
-  val Epsilon = 1.0000000000000001E-005f
+  val Epsilon = 1.0000000000000001E-004f
   val MaxDistance = 100000000.0f
 
   def cosineSampleHemisphere(normal: Tuple3f, u1: Float, u2: Float): Tuple3f = {
-    val sinPolar = scala.math.sqrt(1.0D - u1)
+    val sinPolar = scala.math.sqrt(1.0D - u2)
     val cosPolar = scala.math.sqrt(u2)
     val azimuth = scala.math.Pi * 2.0D * u1
     val cosAzimuth = scala.math.cos(azimuth)

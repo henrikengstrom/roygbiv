@@ -60,6 +60,10 @@ case class RGBColor(red: Float, green: Float, blue: Float) extends Color {
   def isNaN: Boolean = {
     red.isNaN || green.isNaN || blue.isNaN
   }
+
+  def isBlack: Boolean = {
+    return !(red > 0.0f || green > 0.0f || blue > 0.0f)
+  }
 }
 
 object RGBColor {

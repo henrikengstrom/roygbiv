@@ -35,6 +35,6 @@ class TrivialAccelerator extends Accelerator {
       }
     }
 
-    if (intersection.t == MathUtils.MaxDistance) None else Some(intersection)
+    if (intersection.t == MathUtils.MaxDistance || intersection.t <= MathUtils.Epsilon) None else Some(intersection)
   }
 }

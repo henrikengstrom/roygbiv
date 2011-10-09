@@ -1,5 +1,7 @@
+package roygbiv.math
+
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,12 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.material
 
-import roygbiv.bxdf.BSDF
+class UniformRNG extends RandomNumberGenerator {
+  val rng = new scala.util.Random(System.nanoTime)
 
-trait Material {
-  def id: String
-  def name: String
-  def bsdf: BSDF
+  def nextRandom: Float = {
+    rng.nextFloat
+  }
 }

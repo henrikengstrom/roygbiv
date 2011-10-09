@@ -1,5 +1,5 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,12 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.material
+package roygbiv.math
 
-import roygbiv.bxdf.BSDF
-
-trait Material {
-  def id: String
-  def name: String
-  def bsdf: BSDF
+trait RandomNumberGenerator {
+  def nextRandom: Float
 }

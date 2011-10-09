@@ -23,6 +23,7 @@ import roygbiv.common.WorkResult
 import roygbiv.integrator.UnidirectionalPathIntegrator
 import collection.mutable.ArrayBuffer
 import roygbiv.color.RGBColor
+import roygbiv.math.UniformRNG
 
 case object Stop
 
@@ -50,6 +51,7 @@ class Worker(aggregator: ActorRef) extends Actor {
     val imageWidth = scene.get.camera.screenWidth
     val imageHeight = scene.get.camera.screenHeight
     val integrator = UnidirectionalPathIntegrator(scene.get)
+    val rng = new UniformRNG
 
     // This is where the magic happens
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
@@ -58,7 +60,7 @@ class Worker(aggregator: ActorRef) extends Actor {
       y <- 0 until imageHeight
       x <- 0 until imageWidth
     } yield {
-      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
+      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float], rng)
     }
 
     aggregator ! WorkResult(id, buffer.toSeq)
