@@ -55,8 +55,8 @@ class Worker(aggregator: ActorRef) extends Actor {
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
 
     for {
-      x <- 0 until imageWidth;
       y <- 0 until imageHeight
+      x <- 0 until imageWidth
     } yield {
       buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float])
     }
