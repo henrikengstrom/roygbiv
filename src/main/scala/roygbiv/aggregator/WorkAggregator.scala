@@ -30,8 +30,8 @@ case object GenerateImage
 class WorkAggregator extends Actor {
   var scheduled: Option[ScheduledFuture[_]] = None
   var buffer = new ArrayBuffer[RGBColor]()
-  val width = 1024
-  val height = 768
+  val width = 800
+  val height = 800
 
   var resultCounter = 0
 
