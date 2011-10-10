@@ -18,7 +18,7 @@ package roygbiv.scene
 import roygbiv.acceleration.Accelerator
 import roygbiv.math.Ray
 import roygbiv.shape.{Intersection, Emitter, Shape}
-import roygbiv.camera.{PinholeCamera, Camera}
+import roygbiv.camera.PinholeCamera
 
 case class Scene(name: String, accelerator: Accelerator, camera: PinholeCamera) {
   var emitters = List[Emitter]()

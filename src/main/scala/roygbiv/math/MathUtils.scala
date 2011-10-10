@@ -42,4 +42,9 @@ object MathUtils {
             (w.x * u.y) + (w.y * v.y) + (w.z * normal.y),
             (w.x * u.z) + (w.y * v.z) + (w.z * normal.z)).normalize
   }
+
+  def powerHeuristic(pdf1: Float, pdf2: Float): Float = {
+    val pdf1sq = pdf1 * pdf1
+    return (pdf1sq) / (pdf1sq + pdf2 * pdf2)
+  }
 }

@@ -15,25 +15,25 @@
 */
 package roygbiv.shape
 
-import roygbiv.math.Tuple3f
 import roygbiv.color.RGBColor
+import roygbiv.math.{MathUtils, OrthonormalBasis, Tuple3f}
 
 case class DiscEmitter(center: Tuple3f, normal: Tuple3f, radius: Float, color: RGBColor, power: Float) extends Disc with Emitter {
   val radiance = color * power
-
   lazy val pdf = 1.0f / area
+  lazy val basis = OrthonormalBasis.makeFromW(normal)
 
   def le: RGBColor = radiance
 
   def getSample(u1: Float, u2: Float): LightSample = {
-    // TODO - implement
-    /*
-    var point: Point3f = getRandomPointOnSurface(r1, r2)
-    var normalAtPoint: Vector3f = getNormalAtPoint(point)
-    var color: Spectrum = new Spectrum(_radiance)
-    var pdf: Float = 1.0f / getArea
-    return new LightSample(point, normalAtPoint, color, pdf)
-    */
-    null
+    LightSample(randomPointOnSurface(u1, u2), normal, radiance, pdf)
+  }
+
+  def randomPointOnSurface(u1: Float, u2: Float): Tuple3f = {
+    val theta =  u2 * MathUtils.TwoPi
+    val sqrtFactor = radius * scala.math.sqrt(u1)
+    val x = (sqrtFactor * scala.math.cos(theta)).asInstanceOf[Float]
+    val y = (sqrtFactor * scala.math.sin(theta)).asInstanceOf[Float]
+    basis.transform(Tuple3f(x, y, 0.0f)) + center
   }
 }
