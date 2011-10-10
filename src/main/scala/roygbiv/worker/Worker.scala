@@ -60,7 +60,9 @@ class Worker(aggregator: ActorRef) extends Actor {
       y <- 0 until imageHeight
       x <- 0 until imageWidth
     } yield {
-      buffer += integrator.l(x.asInstanceOf[Float], y.asInstanceOf[Float], rng)
+      // Ugly hack to sample pixels randomly, a real pixel sampling mechanism should be used here; i.e QMC sequences
+      // or plain stratified sampling.
+      buffer += integrator.l(x + rng.nextRandom, y + rng.nextRandom, rng)
     }
 
     aggregator ! WorkResult(id, buffer.toSeq)
