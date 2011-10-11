@@ -15,8 +15,8 @@
 */
 package roygbiv.shape
 
-import roygbiv.math.Tuple3f
 import roygbiv.color.RGBColor
+import roygbiv.math.{MathUtils, Tuple3f}
 
 case class SphereEmitter(center: Tuple3f, radius: Float, color: RGBColor, power: Float) extends Sphere with Emitter {
   val radiance = color * power
@@ -26,14 +26,8 @@ case class SphereEmitter(center: Tuple3f, radius: Float, color: RGBColor, power:
   def le: RGBColor = radiance
 
   def getSample(u1: Float, u2: Float): LightSample = {
-    // TODO - implement
-    /*
-    var point: Point3f = getRandomPointOnSurface(r1, r2)
-    var normalAtPoint: Vector3f = getNormalAtPoint(point)
-    var color: Spectrum = new Spectrum(_radiance)
-    var pdf: Float = 1.0f / getArea
-    return new LightSample(point, normalAtPoint, color, pdf)
-    */
-    null
+    val point = MathUtils.getRandomVectorInUnitSphere(u1, u2) * radius + center
+    LightSample(point, getNormalAtPoint(point), radiance, pdf)
   }
+
 }

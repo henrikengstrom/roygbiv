@@ -47,4 +47,14 @@ object MathUtils {
     val pdf1sq = pdf1 * pdf1
     return (pdf1sq) / (pdf1sq + pdf2 * pdf2)
   }
+
+  def getRandomVectorInUnitSphere(u1: Float, u2: Float): Tuple3f = {
+    val sqrt = scala.math.sqrt(u2 * (1.0f - u2))
+    val twoPi = 2.0D * scala.math.Pi * u1
+    val x = (2.0D * scala.math.cos(twoPi) * sqrt).asInstanceOf[Float]
+    val y = (2.0D * scala.math.sin(twoPi) * sqrt).asInstanceOf[Float]
+    val z = 1.0f - (2.0f * u2)
+
+    Tuple3f(x, y, z).normalize
+  }
 }

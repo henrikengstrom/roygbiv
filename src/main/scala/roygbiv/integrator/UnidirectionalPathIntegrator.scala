@@ -17,7 +17,6 @@ package roygbiv.integrator
 
 import roygbiv.color.RGBColor
 import roygbiv.scene.Scene
-import roygbiv.bxdf.BSDF
 import roygbiv.math.{Ray, MathUtils, RandomNumberGenerator, Tuple3f}
 import roygbiv.shape._
 
@@ -26,7 +25,6 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
   var lightHit = false
   val numLights = scene.emitters.length
   val lightPdf = if (numLights > 0) 1.0f / numLights else 0.0f
-
 
   def l(pixelX: Float, pixelY: Float, rng: RandomNumberGenerator): RGBColor = {
     val color = tracePixel(pixelX, pixelY, rng)
@@ -39,7 +37,7 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
     scene.intersect(ray) match {
       case Some(i) => i.shape match {
         case s: Scatterer => {
-          estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, s.material.bsdf, 1, rng)
+          estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, 1, rng)
         }
         case e: Emitter => {
           if (e.getNormalAtPoint(i.point).dot(ray.direction) < 0.0f) e.le else RGBColor.Black
@@ -49,22 +47,22 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
     }
   }
 
-  def estimateRadiance(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, bsdf: BSDF, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
+  def estimateRadiance(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
     if (traceDepth > UnidirectionalPathIntegrator.MaxTraceDepth)
       return RGBColor.Black
 
-    var color = estimateIndirectIllumination(shape, intersection, normal, wi, bsdf, traceDepth, rng)
+    var color = estimateIndirectIllumination(shape, intersection, normal, wi, traceDepth, rng)
 
     if (!lightHit)
-      color = color + estimateDirectIllumination (shape, intersection, normal, wi, bsdf, traceDepth, rng)
-    else if (lightHit)
+      color = color + estimateDirectIllumination(shape, intersection, normal, wi, traceDepth, rng)
+    else
       lightHit = false
 
     color
   }
 
-  def estimateIndirectIllumination(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, bsdf: BSDF, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
-    val sample = bsdf.sampleF(wi, normal, rng.nextRandom, rng.nextRandom)
+  def estimateIndirectIllumination(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
+    val sample = shape.material.bsdf.sampleF(wi, normal, rng.nextRandom, rng.nextRandom)
 
     if (sample.pdf == 0.0f)
       return RGBColor.Black
@@ -81,7 +79,7 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
       scene.intersect(ray) match {
         case Some(i) => i.shape match {
           case s: Scatterer => {
-            estimatedRadiance = estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, s.material.bsdf, traceDepth + 1, rng)
+            estimatedRadiance = estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, traceDepth + 1, rng)
           }
           case e: Emitter => {
             val newDot = e.getNormalAtPoint(i.point).dot(ray.direction)
@@ -89,7 +87,7 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
             if (newDot < 0.0f) {
               lightHit = true
 
-              if (bsdf.hasDeltaDistribution) {
+              if (shape.material.bsdf.hasDeltaDistribution) {
                 estimatedRadiance = e.le
               } else {
                 val dot = scala.math.abs(normal.dot(sample.wo))
@@ -118,10 +116,10 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
     estimatedRadiance
   }
 
-  def estimateDirectIllumination(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, bsdf: BSDF, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
+  def estimateDirectIllumination(shape: Scatterer, intersection: Tuple3f, normal: Tuple3f, wi: Tuple3f, traceDepth: Int, rng: RandomNumberGenerator): RGBColor = {
     var retColor = RGBColor.Black
 
-    if (numLights > 0 && !bsdf.hasDeltaDistribution) {
+    if (numLights > 0 && !shape.material.bsdf.hasDeltaDistribution) {
       // Get a sample from a random light in the scene
       val emitter = scene.emitters(scala.math.round(rng.nextRandom * (numLights - 1)))
       val sample = emitter.getSample(rng.nextRandom, rng.nextRandom)
@@ -140,10 +138,10 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
         // Calculate pdfs
         val transformedArea = 1.0f / sample.pdf
         val lPdf = (distanceSquared / (lightCosine * transformedArea)) * lightPdf
-        val bsdfPdf = scala.math.abs(bsdf.pdf(wi, lightVec, normal))
+        val bsdfPdf = scala.math.abs(shape.material.bsdf.pdf(wi, lightVec, normal))
 
         // Return the MIS weighted illumination
-        retColor = weightedIllumination(dot, sample.l, bsdf.f(wi, lightVec, normal), lPdf, bsdfPdf)
+        retColor = weightedIllumination(dot, sample.l, shape.material.bsdf.f(wi, lightVec, normal), lPdf, bsdfPdf)
       }
     }
 
@@ -188,10 +186,7 @@ case class UnidirectionalPathIntegrator(scene: Scene) {
   }
 
   def getAdjustedNormal(normal: Tuple3f, ray: Ray, scatterer: Scatterer): Tuple3f = {
-    if (normal.dot(ray.direction) > 0.0f && !scatterer.material.bsdf.hasDeltaDistribution)
-       -normal
-    else
-      normal
+    if (!scatterer.material.bsdf.hasDeltaDistribution && normal.dot(ray.direction) > 0.0f) -normal else normal
   }
 }
 
