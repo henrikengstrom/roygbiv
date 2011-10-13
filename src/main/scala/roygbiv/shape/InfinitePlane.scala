@@ -15,10 +15,24 @@
 */
 package roygbiv.shape
 
-import roygbiv.math.{Ray, Tuple3f}
+import roygbiv.math.{MathUtils, Ray, Tuple3f}
 
-class InfinitePlane extends Shape {
-  def area: Float = null.asInstanceOf[Float]
-  def intersect(ray: Ray): Option[Intersection] = None
-  def getNormalAtPoint(point: Tuple3f): Tuple3f = null
+trait InfinitePlane extends Shape {
+  val area = 0.0f
+  def center: Tuple3f
+  def normal: Tuple3f
+
+  def intersect(ray: Ray): Option[Intersection] = {
+    var result: Option[Intersection] = None
+    val incidence = ray.direction.dot(normal)
+    val oc = center - ray.origin
+    val t = oc.dot(normal) / incidence
+
+    if (t > MathUtils.Epsilon)
+      result = Some(Intersection(t, ray.getPointAtT(t), this))
+
+    result
+  }
+
+  def getNormalAtPoint(point: Tuple3f): Tuple3f = normal
 }
