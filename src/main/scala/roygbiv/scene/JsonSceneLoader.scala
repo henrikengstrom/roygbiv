@@ -18,9 +18,9 @@ package roygbiv.scene
 import roygbiv.acceleration.TrivialAccelerator
 import roygbiv.camera.PinholeCamera
 import roygbiv.math.Tuple3f
-import roygbiv.material.DiffuseMaterial
 import roygbiv.color.RGBColor
 import roygbiv.shape.{DiscEmitter, DiscScatterer, SphereScatterer}
+import roygbiv.material.{MirrorMaterial, DiffuseMaterial}
 
 case class JsonSceneLoader(location: String, encoding: String) extends SceneLoader {
   def loadScene: Scene = {
@@ -33,7 +33,8 @@ case class JsonSceneLoader(location: String, encoding: String) extends SceneLoad
     val camera = PinholeCamera(Tuple3f(0.0f, 1.455f, 6.63f), Tuple3f(0.0f, 1.455f, -1.0f), Tuple3f(0.0f, 1.0f, 0.0f), 1.8f, 800, 800)
     val scene = Scene("TestScene", accelerator, camera)
 
-    val sphereMaterial = DiffuseMaterial("m1", "sphere_material", RGBColor(0.2f, 0.8f, 0.2f))
+    //val sphereMaterial = DiffuseMaterial("m1", "sphere_material", RGBColor(0.2f, 0.8f, 0.2f))
+    val sphereMaterial = MirrorMaterial("m1", "sphere_material", RGBColor(1.0f, 1.0f, 1.0f))
     val planeMaterial2 = DiffuseMaterial("m3", "plane_materia2", RGBColor(0.8f, 0.8f, 0.8f))
     val redMaterial = DiffuseMaterial("m3", "plane_materia2", RGBColor(0.8f, 0.2f, 0.2f))
     val greenMaterial = DiffuseMaterial("m3", "plane_materia2", RGBColor(0.2f, 0.2f, 0.8f))
