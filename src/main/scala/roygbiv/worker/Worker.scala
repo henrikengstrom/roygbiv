@@ -23,7 +23,7 @@ import roygbiv.common.WorkResult
 import roygbiv.integrator.UnidirectionalPathIntegrator
 import collection.mutable.ArrayBuffer
 import roygbiv.color.RGBColor
-import roygbiv.math.UniformRNG
+import roygbiv.math.{MersenneTwisterRNG, UniformRNG}
 
 case object Stop
 
@@ -51,7 +51,7 @@ class Worker(aggregator: ActorRef) extends Actor {
     val imageWidth = scene.get.camera.screenWidth
     val imageHeight = scene.get.camera.screenHeight
     val integrator = UnidirectionalPathIntegrator(scene.get)
-    val rng = new UniformRNG
+    val rng = new MersenneTwisterRNG
 
     // This is where the magic happens
     val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
