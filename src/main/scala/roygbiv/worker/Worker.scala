@@ -32,15 +32,26 @@ case object ContinueQuestion
 class Worker(aggregator: ActorRef) extends Actor {
   // TODO : Improve id!!!
   val id = "worker" + Thread.currentThread.getId
+  var imageWidth = 0
+  var imageHeight = 0
+  var buffer = new ArrayBuffer[RGBColor]()
+  val rng = new MersenneTwisterRNG
 
   self.dispatcher = Worker.WorkerDispatcher
-  var continue = true
-  var scene: Option[Scene] = None
 
+  var continue = true
+
+  var scene: Option[Scene] = None
   def receive = {
     case s: Scene =>
       EventHandler.debug(this, "Starting to work on scene [%s]".format(scene))
       scene = Some(s)
+
+      imageHeight = scene.get.camera.screenHeight
+      imageWidth = scene.get.camera.screenWidth
+      buffer = new ArrayBuffer[RGBColor]()
+      buffer = buffer.padTo(imageWidth * imageHeight, RGBColor.Black)
+
       calculate
     case Stop => continue = false
     case ContinueQuestion => if (continue) calculate
@@ -48,21 +59,20 @@ class Worker(aggregator: ActorRef) extends Actor {
   }
 
   def calculate = {
-    val imageWidth = scene.get.camera.screenWidth
-    val imageHeight = scene.get.camera.screenHeight
-    val integrator = UnidirectionalPathIntegrator(scene.get)
-    val rng = new MersenneTwisterRNG
-
     // This is where the magic happens
-    val buffer = new ArrayBuffer[RGBColor](imageWidth * imageHeight)
+    val integrator = UnidirectionalPathIntegrator(scene.get)
 
+    var i = 0
     for {
       y <- 0 until imageHeight
       x <- 0 until imageWidth
     } yield {
       // Ugly hack to sample pixels randomly, a real pixel sampling mechanism should be used here; i.e QMC sequences
       // or plain stratified sampling.
-      buffer += integrator.l(x + rng.nextRandom, y + rng.nextRandom, rng)
+      buffer(i) = integrator.l(x + rng.nextRandom, y + rng.nextRandom, rng)
+      i += 1
+      // TODO : is there a better way to iterate than using a var i -
+      // perhaps a nextPos.
     }
 
     aggregator ! WorkResult(id, buffer.toSeq)
