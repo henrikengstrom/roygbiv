@@ -13,9 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-package roygbiv.math
+package roygbiv.sampler
 
-trait RandomNumberGenerator {
-  def nextFloat: Float
-  def nextInt: Int
+trait Sampler {
+  def generateSamples
+  def nextSample1D: Float
+  def nextSample2D: (Float, Float)
 }

@@ -61,7 +61,7 @@ case class MersenneTwisterRNG (seed: Long = java.lang.System.nanoTime() + Thread
    * Returns a random float in the half-open range from [0.0f,1.0f). Thus 0.0f
    * is a valid result but 1.0f is not.
    */
-  final def nextRandom: Float = {
+  final def nextFloat: Float = {
     var y = 0
 
     if (mti >= N) {
@@ -92,5 +92,38 @@ case class MersenneTwisterRNG (seed: Long = java.lang.System.nanoTime() + Thread
     y ^= (y >>> 18)
 
     (y >>> 8) / denominator
+  }
+
+  final def nextInt: Int = {
+    var y = 0
+
+    if (mti >= N) {
+      var kk = 0
+
+      while (kk < N - M) {
+        y = (mt(kk) & UpperMask) | (mt(kk + 1) & LowerMask)
+        mt(kk) = mt(kk + M) ^ (y >>> 1) ^ mag01(y & 0x1)
+        kk += 1
+      }
+      while (kk < N - 1) {
+        y = (mt(kk) & UpperMask) | (mt(kk + 1) & LowerMask)
+        mt(kk) = mt(kk + (M - N)) ^ (y >>> 1) ^ mag01(y & 0x1)
+        kk += 1
+      }
+      y = (mt(N - 1) & UpperMask) | (mt(0) & LowerMask)
+      mt(N - 1) = mt(M - 1) ^ (y >>> 1) ^ mag01(y & 0x1)
+
+      mti = 0
+    }
+
+    y = mt(mti)
+    mti += 1
+
+    y ^= y >>> 11
+    y ^= (y << 7) & TemperingMaskB
+    y ^= (y << 15) & TemperingMaskC
+    y ^= (y >>> 18)
+
+    y
   }
 }

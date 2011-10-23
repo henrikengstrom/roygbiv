@@ -15,6 +15,8 @@
 */
 package roygbiv.math
 
+import collection.mutable.ArrayBuffer
+
 object MathUtils {
   import roygbiv.math.Tuple3f._
 
@@ -45,7 +47,7 @@ object MathUtils {
 
   def powerHeuristic(pdf1: Float, pdf2: Float): Float = {
     val pdf1sq = pdf1 * pdf1
-    return (pdf1sq) / (pdf1sq + pdf2 * pdf2)
+    (pdf1sq) / (pdf1sq + pdf2 * pdf2)
   }
 
   def getRandomVectorInUnitSphere(u1: Float, u2: Float): Tuple3f = {
@@ -56,5 +58,47 @@ object MathUtils {
     val z = 1.0f - (2.0f * u2)
 
     Tuple3f(x, y, z).normalize
+  }
+
+  def vanDerCorput(m: Int, scramble: Int): Float = {
+    var n = m
+    n = (n << 16) | (n >>> 16)
+    n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >>> 8)
+    n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >>> 4)
+    n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >>> 2)
+    n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >>> 1)
+    n ^= scramble
+    ((n >>> 8) & 0xffffff) / (1 << 24).asInstanceOf[Float]
+  }
+
+  def sobol2(m: Int, s: Int): Float = {
+    var n = m
+    var scramble = s
+    var v = 1 << 31
+
+    while (n != 0) {
+      if ((n & 1) != 0)
+        scramble ^= v
+
+      n >>>= 1
+      v ^= v >>> 1
+    }
+
+    (((scramble >>> 8) & 0xffffff)) / (1 << 24).asInstanceOf[Float]
+  }
+
+  def shuffle[T](array: ArrayBuffer[T], count: Int,  dims: Int, rng: RandomNumberGenerator) {
+    for (i <- 0 until count) {
+      val other = i + scala.math.abs(rng.nextInt % (count - i))
+
+      for (j <- 0 until  dims) {
+        val pos1 = dims * i + j
+        val pos2 = dims * other + j
+        val temp = array(pos1)
+        array(pos1) = array(pos2)
+        array(pos2) = temp
+      }
+
+    }
   }
 }

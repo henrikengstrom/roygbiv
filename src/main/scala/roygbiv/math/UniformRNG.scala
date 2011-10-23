@@ -19,7 +19,6 @@ package roygbiv.math
 class UniformRNG extends RandomNumberGenerator {
   val rng = new scala.util.Random(System.nanoTime)
 
-  def nextRandom: Float = {
-    rng.nextFloat
-  }
+  def nextFloat: Float = rng.nextFloat
+  def nextInt: Int = rng.nextInt
 }
