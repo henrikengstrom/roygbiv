@@ -33,7 +33,7 @@ case class LowDiscrepancySampler(n1DSamples: Int, n2DSamples: Int, rng: RandomNu
 
     for (i <- 0 until (n2DSamples * 2) by 2) {
       twoDSamples(i) = MathUtils.vanDerCorput(i, rng.nextInt)
-      twoDSamples(i + 1) = MathUtils.sobol2(i + 1, rng.nextInt)
+      twoDSamples(i + 1) = MathUtils.sobol2(i, rng.nextInt)
     }
 
     MathUtils.shuffle(oneDSamples, n1DSamples, 1, rng)
