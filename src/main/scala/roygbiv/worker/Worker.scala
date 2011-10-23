@@ -24,6 +24,7 @@ import roygbiv.integrator.UnidirectionalPathIntegrator
 import collection.mutable.ArrayBuffer
 import roygbiv.color.RGBColor
 import roygbiv.math.{MersenneTwisterRNG, UniformRNG}
+import roygbiv.sampler.LowDiscrepancySampler
 
 case object Stop
 
@@ -36,6 +37,7 @@ class Worker(aggregator: ActorRef) extends Actor {
   var imageHeight = 0
   var buffer = new ArrayBuffer[RGBColor]()
   val rng = new MersenneTwisterRNG
+  val sampler = LowDiscrepancySampler(4, 4, rng)
 
   self.dispatcher = Worker.WorkerDispatcher
 
@@ -60,16 +62,15 @@ class Worker(aggregator: ActorRef) extends Actor {
 
   def calculate = {
     // This is where the magic happens
-    val integrator = UnidirectionalPathIntegrator(scene.get)
+    val integrator = UnidirectionalPathIntegrator(scene.get, sampler)
 
     var i = 0
     for {
       y <- 0 until imageHeight
       x <- 0 until imageWidth
     } yield {
-      // Ugly hack to sample pixels randomly, a real pixel sampling mechanism should be used here; i.e QMC sequences
-      // or plain stratified sampling.
-      buffer(i) = integrator.l(x + rng.nextRandom, y + rng.nextRandom, rng)
+      val (xP, yP) = sampler.nextSample2D
+      buffer(i) = integrator.l(x + xP, y + yP)
       i += 1
       // TODO : is there a better way to iterate than using a var i -
       // perhaps a nextPos.
