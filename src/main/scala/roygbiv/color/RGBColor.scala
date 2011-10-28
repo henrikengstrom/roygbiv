@@ -15,11 +15,15 @@
 */
 package roygbiv.color
 
+import roygbiv.math.Tuple3f
+
 /**
  * Immutable implementation of an RGB color.
  */
 case class RGBColor(red: Float, green: Float, blue: Float) extends Color {
   import RGBColor._
+
+  def this(tuple: Tuple3f) = this(tuple.x, tuple.y, tuple.z)
 
   def this(color: Float) = {
     this(color, color, color)
@@ -71,6 +75,8 @@ object RGBColor {
   val Black = RGBColor(0.0f)
 
   def apply(color: Float) = new RGBColor(color)
+
+  def apply(tuple: Tuple3f) = new RGBColor(tuple)
 
   private def gammaCompress(value: Float): Float = {
     if (value <= 0.0031308f) 12.92f * value else (1.055f * scala.math.pow(value, Gamma) - 0.055f).asInstanceOf[Float]

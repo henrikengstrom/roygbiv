@@ -15,19 +15,17 @@
 */
 package roygbiv.scene
 
-import akka.actor.Actor
 import json.JsonSceneLoader
+import org.scalatest.WordSpec
+import org.scalatest.matchers.MustMatchers
 
-case class LoadScene(sceneType: String, location: String)
-
-class SceneLoaderOrchestrator extends Actor {
-  def receive = {
-    case LoadScene(JsonSceneLoader.SceneType, location) =>
-      self.channel ! JsonSceneLoader(location, SceneLoaderOrchestrator.FileEncoding).loadScene
-    case _ => println("Unknown scene type or message")
+@org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
+class JsonSceneLoaderSpec extends WordSpec with MustMatchers {
+  "JsonSceneLoader" must {
+    "load and parse JSON into case classes" in {
+      val sceneLoader = JsonSceneLoader("src/main/resources/SceneExample.lcj", "UTF-8")
+      val scene = sceneLoader.loadScene
+      scene.name must equal ("TestScene")
+    }
   }
-}
-
-object SceneLoaderOrchestrator {
-  val FileEncoding = "UTF-8"
 }

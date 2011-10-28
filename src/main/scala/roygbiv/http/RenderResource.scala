@@ -20,7 +20,8 @@ import akka.http.{RequestMethod, Get}
 import roygbiv.aggregator.WorkAggregator
 import akka.actor.{ActorRef, Actor}
 import roygbiv.worker.{Stop, Worker}
-import roygbiv.scene.{JsonSceneLoader, SceneLoaderOrchestrator, LoadScene, Scene}
+import roygbiv.scene.{SceneLoaderOrchestrator, LoadScene, Scene}
+import roygbiv.scene.json.JsonSceneLoader
 
 class RenderResource extends Actor {
   import RenderResource._

@@ -1,0 +1,139 @@
+{
+    "_COMMENT_": "*** DO NOT ALTER THIS FILE AS IT SERVES AS A TEMPLATE FOR SOME TESTS ***",
+    "scene": {
+        "version": "1.0",
+        "name": "TestScene",
+        "image": {
+            "width": 1024,
+            "height": 768
+        },
+        "renderer": {
+            "rtype": "pathtracer"
+        },
+        "camera": {
+            "ctype": "pinhole",
+            "up": [
+                0,
+                1,
+                0
+            ],
+            "loc": [
+                0,
+                1,
+                7
+            ],
+            "target": [
+                0,
+                1,
+                -1
+            ],
+            "viewplanedist":1.9
+        },
+        "materials": [
+            {
+                "mtype": "diffuse",
+                "id": "0",
+                "name": "sphere_material",
+                "color": [
+                    0.5,
+                    0.5,
+                    0.9
+                ]
+            },
+            {
+                "mtype": "diffuse",
+                "id": "1",
+                "name": "plane_material",
+                "color": [
+                    0.5,
+                    0.5,
+                    0.5
+                ]
+            }
+        ],
+        "lights": [
+            {
+                "ltype": "spherical",
+                "name": "Light1",
+                "radius": 0.5,
+                "loc": [
+                    0,
+                    1.5,
+                    0
+                ],
+                "color": [
+                    1,
+                    0.6,
+                    0.2
+                ],
+                "power": 1
+            },
+            {
+                "ltype": "disc",
+                "name": "Light2",
+                "radius": 0.5,
+                "loc": [
+                    0,
+                    2.5,
+                    0
+                ],
+                "normal": [
+                    0,
+                    -1,
+                    0
+                ],
+                "color": [
+                    1,
+                    1,
+                    1
+                ],
+                "power": 10
+            }
+        ],
+        "geometry": [
+            {
+                "gtype": "sphere",
+                "name": "Sphere1",
+                "radius": 0.5,
+                "loc": [
+                    0,
+                    0.5,
+                    0
+                ],
+                "mid": "0"
+            },
+            {
+                "gtype": "disc",
+                "name": "Disc1",
+                "radius": 0.5,
+                "loc": [
+                    1,
+                    0.5,
+                    0
+                ],
+                "normal": [
+                    0,
+                    0,
+                    1
+                ],
+                "mid": "1"
+            },
+            {
+                "gtype": "disc",
+                "name": "Disc2",
+                "radius": 12.5,
+                "loc": [
+                    0,
+                    0,
+                    0
+                ],
+                "normal": [
+                    0,
+                    1,
+                    0
+                ],
+                "mid": "1"
+            }
+        ]
+    }
+}
