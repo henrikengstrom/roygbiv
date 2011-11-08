@@ -6,9 +6,36 @@ object RoygbivBuild extends Build {
   val Version      = "1.0-SNAPSHOT"
   val ScalaVersion = "2.9.1"
 
-  lazy val atmos = Project(
+  lazy val parentSettings = buildSettings
+
+  lazy val roygbiv = Project(
     id = "roygbiv",
     base = file("."),
+    settings = parentSettings,
+    aggregate = Seq(shared, server, client)
+  )
+
+  lazy val shared = Project(
+    id = "shared",
+    base = file("shared"),
+    settings = defaultSettings ++ Seq(
+      libraryDependencies ++= Dependencies.roygbiv
+    )
+  )
+
+  lazy val server = Project(
+    id = "server",
+    base = file("server"),
+    dependencies = Seq(shared),
+    settings = defaultSettings ++ Seq(
+      libraryDependencies ++= Dependencies.roygbiv
+    )
+  )
+
+  lazy val client = Project(
+    id = "client",
+    base = file("client"),
+    dependencies = Seq(shared),
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Dependencies.roygbiv
     )
