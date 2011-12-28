@@ -18,15 +18,17 @@ package roygbiv
 import akka.actor.Actor
 import akka.actor.Actor._
 import akka.config.Config.config
-import worker.{Worker, Work}
+import common.WorkResult
+import worker.{RayTracer, Work}
 import akka.event.EventHandler
+import akka.dispatch.Dispatchers
 
 class ClientWorker extends Actor {
   import ClientWorker._
 
   def receive = {
-    case work: Work =>
-      actorOf(new Worker(ServerHost, ServerPort)).start() ! work
+    case work @ Work => actorOf(new RayTracer(WorkerDispatcher)).start() ! work
+    case result @ WorkResult => remote.actorFor(ServerAggregatorId, ServerHost, ServerPort) ! result
     case other => EventHandler.error(this, "Received unexpected message [%s]".format(other))
   }
 }
@@ -34,4 +36,14 @@ class ClientWorker extends Actor {
 object ClientWorker {
   val ServerHost = config.getString("akka.roygbiv.remote.hostname", "127.0.0.1")
   val ServerPort = config.getInt("akka.roygbiv.remote.port", 2552)
+  val ServerAggregatorId = config.getString("akka.roygbiv.remote.aggregatorId", "aggregator")
+
+  val availableProcessors = Runtime.getRuntime.availableProcessors
+
+  // Create dedicated dispatcher for workers.
+  // Since we want to minimize context switching in threads to maximize output from CPU during the
+  // rendering of an image the number of available threads in the dispatcher = number of available processors
+  lazy val WorkerDispatcher = Dispatchers.newExecutorBasedEventDrivenDispatcher("worker-dispatcher")
+    .setCorePoolSize(availableProcessors)
+    .build
 }
