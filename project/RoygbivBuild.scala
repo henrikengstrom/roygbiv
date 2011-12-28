@@ -1,10 +1,5 @@
-import com.amazonaws.auth.PropertiesCredentials
-import com.amazonaws.services.ec2.model.RunInstancesRequest
 import sbt._
 import Keys._
-import akka.atmos.provisioning._
-import DeployPlugin._
-import amazon.EC2Deploy
 
 object RoygbivBuild extends Build {
   val Organization = "roygbiv"
@@ -13,30 +8,10 @@ object RoygbivBuild extends Build {
 
   lazy val parentSettings = buildSettings
 
-  lazy val deployDescriptor = new EC2Deploy with SSHUpload {
-    val credentials = new PropertiesCredentials(new java.io.File("project/aws.properties"))
-    val startupOptions = () => (new RunInstancesRequest).withImageId("ami-9e2e1cea")
-
-    val ec2endpoint = "https://ec2.eu-west-1.amazonaws.com"
-    val remoteUser = "ec2-user"
-    override val extraArgs = "-i /apps/aws/ec2/Akka_Host.pem"
-    val roygbivAlloc = Alloc("roygbiv", 3, startupOptions)
-
-    val svc = Service(
-      name = "master",
-      launcher = ssh(Seq("./shared/target/scala-2.9.1/shared_2.9.1-1.0-SNAPSHOT.jar",
-        "./server/target/scala-2.9.1/server_2.9.1-1.0-SNAPSHOT.jar",
-        "./client/target/scala-2.9.1/client_2.9.1-1.0-SNAPSHOT.jar")),
-      cmd = "./dist/bin/start",
-      alloc = roygbivAlloc,
-      N = 2
-    )
-  }
-
   lazy val roygbiv = Project(
     id = "roygbiv",
     base = file("."),
-    settings = parentSettings ++ deploySettings ++ Seq(deploy := deployDescriptor),
+    settings = parentSettings,
     aggregate = Seq(shared, server, client)
   )
 
