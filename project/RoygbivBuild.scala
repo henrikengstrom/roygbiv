@@ -60,13 +60,13 @@ object RoygbivBuild extends Build {
 object Dependencies {
   import Dependency._
 
-  val roygbiv = Seq(akkaKernel, akkaRemote, sjson, slf4j, logback, scalatest, junit)
+  val roygbiv = Seq(akkaActor, akkaKernel, akkaRemote, sjson, slf4j, logback, scalatest, junit)
 }
 
 object Dependency {
 
   object Version {
-    val Akka      = "1.2"
+    val Akka      = "2.0-M1"
     val Scalatest = "1.6.1"
     val Slf4j     = "1.6.0"
     val JUnit     = "4.5"
@@ -74,11 +74,12 @@ object Dependency {
     val Sjson     = "0.15"
   }
 
-  val akkaKernel	  = "se.scalablesolutions.akka" % "akka-kernel"        % Version.Akka
-  val akkaRemote    = "se.scalablesolutions.akka" % "akka-remote"        % Version.Akka
-  val slf4j         = "org.slf4j"                 % "slf4j-api"          % Version.Slf4j
-  val logback       = "ch.qos.logback"            % "logback-classic"    % Version.Logback
-  val sjson         = "net.debasishg"             % "sjson_2.9.1"        % Version.Sjson
+  val akkaActor	    = "com.typesafe.akka"         % "akka-actor"          % Version.Akka
+  val akkaKernel	  = "com.typesafe.akka"         % "akka-kernel"         % Version.Akka
+  val akkaRemote    = "com.typesafe.akka"         % "akka-remote"         % Version.Akka
+  val slf4j         = "org.slf4j"                 % "slf4j-api"           % Version.Slf4j
+  val logback       = "ch.qos.logback"            % "logback-classic"     % Version.Logback
+  val sjson         = "net.debasishg"             % "sjson_2.9.1"         % Version.Sjson
 
   // ---- Test dependencies ----
 

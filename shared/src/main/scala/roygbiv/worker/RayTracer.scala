@@ -1,5 +1,5 @@
 /**
-Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,40 +16,31 @@ Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
 package roygbiv.worker
 
 import roygbiv.scene.Scene
-import akka.event.EventHandler
-import roygbiv.common.WorkResult
 import roygbiv.integrator.UnidirectionalPathIntegrator
 import collection.mutable.ArrayBuffer
 import roygbiv.color.RGBColor
 import roygbiv.math.MersenneTwisterRNG
 import roygbiv.sampler.LowDiscrepancySampler
-import akka.dispatch.MessageDispatcher
 import akka.actor.{ActorRef, Actor}
-
-case object Stop
-
-case object Start
-
-case object Pause
+import roygbiv.{WorkResult, Stop, Pause, Start}
 
 case object ProcessCheckPoint
 
-class RayTracer(WorkerDispatcher: MessageDispatcher) extends Actor {
+class RayTracer extends Actor {
   val id = "RayTracer-" + Thread.currentThread.getId
   var imageWidth = 0
   var imageHeight = 0
   var buffer = new ArrayBuffer[RGBColor]()
   val rng = new MersenneTwisterRNG
   val sampler = LowDiscrepancySampler(4, 4, rng)
-  self.dispatcher = WorkerDispatcher
   var continue = true
   var scene: Option[Scene] = None
   var parentActor: Option[ActorRef] = None
 
   def receive = {
     case Work(s) =>
-      EventHandler.debug(this, "Starting to work on scene [%s]".format(scene))
-      parentActor = self.sender
+      //EventHandler.debug(this, "Starting to work on scene [%s]".format(scene))
+      parentActor = Some(sender)
       scene = Some(s)
       imageHeight = scene.get.camera.screenHeight
       imageWidth = scene.get.camera.screenWidth
@@ -65,7 +56,7 @@ class RayTracer(WorkerDispatcher: MessageDispatcher) extends Actor {
       continue = true
       calculate()
     case ProcessCheckPoint => if (continue) calculate()
-    case unknown => EventHandler.warning(this, "Unknown message: " + unknown)
+    case unknown => //EventHandler.warning(this, "Unknown message: " + unknown)
   }
 
   def calculate() = {
@@ -83,7 +74,7 @@ class RayTracer(WorkerDispatcher: MessageDispatcher) extends Actor {
     }
 
     // Send result to parent actor
-    parentActor.get ! WorkResult(id, buffer.toSeq)
+    parentActor.get ! WorkResult(id, 0, buffer.toSeq)
 
     // Check if we should continue the work
     self ! ProcessCheckPoint

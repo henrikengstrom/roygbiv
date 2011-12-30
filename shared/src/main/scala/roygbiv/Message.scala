@@ -12,9 +12,22 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-*/
-package roygbiv.common
+ */
+package roygbiv
 
-import roygbiv.color.RGBColor
+import color.RGBColor
+import scene.Scene
 
-case class WorkResult(workerId: String, result: Seq[RGBColor])
+trait Message
+
+case class ClientRegistration(remoteAddress: String) extends Message
+
+case object Pause extends Message
+
+case object Stop extends Message
+
+case object Start extends Message
+
+case class WorkInstruction(aggregatorServer: String, scene: Scene)
+
+case class WorkResult(workerId: String, clientThreads: Int, result: Seq[RGBColor])

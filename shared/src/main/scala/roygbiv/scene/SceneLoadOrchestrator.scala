@@ -23,7 +23,7 @@ case class LoadScene(sceneType: String, location: String)
 class SceneLoaderOrchestrator extends Actor {
   def receive = {
     case LoadScene(JsonSceneLoader.SceneType, location) ⇒
-      self.channel ! JsonSceneLoader(location, SceneLoaderOrchestrator.FileEncoding).loadScene
+      sender ! JsonSceneLoader(location, SceneLoaderOrchestrator.FileEncoding).loadScene
     case _ ⇒ println("Unknown scene type or message")
   }
 }

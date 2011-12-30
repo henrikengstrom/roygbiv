@@ -35,8 +35,6 @@
 */
 package roygbiv.math
 
-import akka.event.EventHandler
-
 /**
  * Mersenne twister random number generator.
  */
