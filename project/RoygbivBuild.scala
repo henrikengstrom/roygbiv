@@ -66,7 +66,7 @@ object Dependencies {
 object Dependency {
 
   object Version {
-    val Akka      = "2.0-M1"
+    val Akka      = "2.0-M2"
     val Scalatest = "1.6.1"
     val Slf4j     = "1.6.0"
     val JUnit     = "4.5"

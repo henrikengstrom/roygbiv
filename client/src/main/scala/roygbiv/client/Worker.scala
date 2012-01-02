@@ -35,7 +35,7 @@ class Worker extends Actor {
     case Start ⇒
       if (scene.isDefined) {
         1 until availableProcessors foreach { i =>
-          val worker = context.actorOf(Props[RayTracer].withDispatcher(context.system.dispatcherFactory.newPinnedDispatcher("rt" + i)))
+          val worker = context.actorOf(Props[RayTracer].withDispatcher("pinned-dispatcher"), "worker" + i)
           worker ! new roygbiv.worker.Work(scene.get)
           workerHandles = worker +: workerHandles
         }
