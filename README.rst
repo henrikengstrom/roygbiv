@@ -48,67 +48,10 @@ Open IDEA and select to open a project, select the "roygbiv" folder where you ha
 Before you can handle Scala in IDEA you must download the Scala plugin (IntelliJ IDEA -> Preferences... -> Plugins -> Scala)
 While you're at it you might as well download the SBT plugin so that you can run SBT from inside the best IDE out there :-)
 
-After importing the project you may want to "clean up" the project settings.
-
-- Inside the IDEA right-click the "roygbiv" and select Open Module Settings.
-- In the sources tab the following source folders should be available:
-  src/main/scala
-  src/main/config
-- In the sources tab the following test folders should be available:
-  src/test/scala
-
-*Note:*
-Please make sure that the IDEA related files are not pushed into the repository as they are client specific!
-Maybe it goes without writing but if the SBT project is updated, e.g. with new dependencies, you must re-generate your IDEA files again. 
-
 Running the system
 ------------------
 
-First you should start the server. This is the hub of the calculation in that it will store all calculations and
-save them onto disk. Therefore it needs to be started before we perform any calculations.
-
-1. Run -> Edit Configurations
-2. Click the + sign and add Application
-3. Enter the following information:
-   - Name: "server"
-   - Main class: akka.kernel.Main
-   - VM parameters: -Xms512M -Xmx1024M
-   - Program Arguments: roygbiv.server.Server
-   - Working directory: /Users/he/code/roygbiv
-   - Use classpath of module: server
-   - Before launch: Select Make and "compile" as target
-4. Click OK
-
-Start the server by clicking the run arrow and select ``server``.
-
-Next it is time to start a client.
-
-1. Run -> Edit Configurations
-2. Click the + sign and add Application
-3. Enter the following information:
-   - Name: "client"
-   - Main class: akka.kernel.Main
-   - VM parameters: -Xms512M -Xmx1024M
-   - Program Arguments: roygbiv.client.Client
-   - Working directory: /Users/he/code/roygbiv
-   - Use classpath of module: client
-   - Before launch: Select Make and "compile" as target
-4. Click OK
-
-Start the client by clicking the run arrow and select ``client``.
-
-This should start the ray tracing. Open up an activity monitor on your machine(s) and see how the CPU is glowing red hot.
-The result will be a file called ``result.png`` which you can find in the root of the project.
-This file is improved every 3 seconds so keep the ray tracing running for a while and you will see the improvement of
-the image as more results are returned from the client(s).
-To stop the rendering just stop the client(s) from running.
-
-Future Improvements and Additions
----------------------------------
-
-* Play 2.0 interface with which it is possible to start, stop and see the result of the rendering.
-* Easy setup of adding and removing clients.
-* More cool stuff.
+TODO : Write new instructions
 
 Disclaimer
 ----------
