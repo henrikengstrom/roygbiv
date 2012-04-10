@@ -32,13 +32,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
-*/
+ */
 package roygbiv.math
 
 /**
  * Mersenne twister random number generator.
  */
-case class MersenneTwisterRNG (seed: Long = java.lang.System.nanoTime() + Thread.currentThread().getId) extends RandomNumberGenerator {
+case class MersenneTwisterRNG(seed: Long = java.lang.System.nanoTime() + Thread.currentThread().getId) extends RandomNumberGenerator {
   val N = 624
   val M = 397
   val MatrixA = 0x9908b0df
@@ -53,7 +53,7 @@ case class MersenneTwisterRNG (seed: Long = java.lang.System.nanoTime() + Thread
   val mag01 = Array[Int](0x0, MatrixA)
 
   mt(0) = (seed & 0xffffffff).toInt
-  for (i <- 1 until N) mt(i) = (1812433253 * (mt(i - 1) ^ (mt(i - 1) >>> 30)) + i) & 0xffffffff
+  for (i ← 1 until N) mt(i) = (1812433253 * (mt(i - 1) ^ (mt(i - 1) >>> 30)) + i) & 0xffffffff
 
   /**
    * Returns a random float in the half-open range from [0.0f,1.0f). Thus 0.0f

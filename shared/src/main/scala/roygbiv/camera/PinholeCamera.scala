@@ -1,21 +1,21 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package roygbiv.camera
 
-import roygbiv.math.{Ray, OrthonormalBasis, Tuple3f}
+import roygbiv.math.{ Ray, OrthonormalBasis, Tuple3f }
 
 case class PinholeCamera(eyeLocation: Tuple3f, target: Tuple3f, upVector: Tuple3f, viewPlaneDistance: Float, screenWidth: Int, screenHeight: Int) extends Camera {
   val invScreenWidth = 1.0f / screenWidth

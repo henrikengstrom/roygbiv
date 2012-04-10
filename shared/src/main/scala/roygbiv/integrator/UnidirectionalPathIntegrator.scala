@@ -1,23 +1,23 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package roygbiv.integrator
 
 import roygbiv.color.RGBColor
 import roygbiv.scene.Scene
-import roygbiv.math.{Ray, MathUtils, Tuple3f}
+import roygbiv.math.{ Ray, MathUtils, Tuple3f }
 import roygbiv.shape._
 import roygbiv.sampler.Sampler
 
@@ -36,15 +36,15 @@ case class UnidirectionalPathIntegrator(scene: Scene, sampler: Sampler) {
     val ray = camera.getRayForPixel(pixelX, pixelY)
 
     scene.intersect(ray) match {
-      case Some(i) => i.shape match {
-        case s: Scatterer => {
+      case Some(i) ⇒ i.shape match {
+        case s: Scatterer ⇒ {
           estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, 1)
         }
-        case e: Emitter => {
+        case e: Emitter ⇒ {
           if (e.getNormalAtPoint(i.point).dot(ray.direction) < 0.0f) e.le else RGBColor.Black
         }
       }
-      case None => RGBColor.Black
+      case None ⇒ RGBColor.Black
     }
   }
 
@@ -79,11 +79,11 @@ case class UnidirectionalPathIntegrator(scene: Scene, sampler: Sampler) {
       val ray = Ray(normal * MathUtils.Epsilon + intersection, sample.wo)
 
       scene.intersect(ray) match {
-        case Some(i) => i.shape match {
-          case s: Scatterer => {
+        case Some(i) ⇒ i.shape match {
+          case s: Scatterer ⇒ {
             estimatedRadiance = estimateRadiance(s, i.point, getAdjustedNormal(s.getNormalAtPoint(i.point), ray, s), -ray.direction, traceDepth + 1)
           }
-          case e: Emitter => {
+          case e: Emitter ⇒ {
             val newDot = e.getNormalAtPoint(i.point).dot(ray.direction)
 
             if (newDot < 0.0f) {
@@ -102,7 +102,7 @@ case class UnidirectionalPathIntegrator(scene: Scene, sampler: Sampler) {
             }
           }
         }
-        case None => estimatedRadiance = RGBColor.Black
+        case None ⇒ estimatedRadiance = RGBColor.Black
       }
 
       if (!estimatedRadiance.isBlack) {
@@ -179,8 +179,8 @@ case class UnidirectionalPathIntegrator(scene: Scene, sampler: Sampler) {
       val ray = Ray(origin, direction.normalize)
 
       scene.intersect(ray) match {
-        case Some(i) => if ((shape eq i.shape)) visible = true
-        case None => visible = false
+        case Some(i) ⇒ if ((shape eq i.shape)) visible = true
+        case None    ⇒ visible = false
       }
     }
 

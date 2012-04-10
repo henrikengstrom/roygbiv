@@ -1,17 +1,17 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package roygbiv.worker
 
@@ -21,8 +21,8 @@ import collection.mutable.ArrayBuffer
 import roygbiv.color.RGBColor
 import roygbiv.math.MersenneTwisterRNG
 import roygbiv.sampler.LowDiscrepancySampler
-import akka.actor.{ActorRef, Actor}
-import roygbiv.{WorkResult, Stop, Pause, Start}
+import akka.actor.{ ActorRef, Actor }
+import roygbiv.{ WorkResult, Stop, Pause, Start }
 
 case object ProcessCheckPoint
 
@@ -38,7 +38,7 @@ class RayTracer extends Actor {
   var parentActor: Option[ActorRef] = None
 
   def receive = {
-    case Work(s) =>
+    case Work(s) ⇒
       //EventHandler.debug(this, "Starting to work on scene [%s]".format(scene))
       parentActor = Some(sender)
       scene = Some(s)
@@ -47,16 +47,16 @@ class RayTracer extends Actor {
       buffer = new ArrayBuffer[RGBColor]()
       buffer = buffer.padTo(imageWidth * imageHeight, RGBColor.Black)
       calculate()
-    case Stop =>
+    case Stop ⇒
       continue = false
       reset()
-    case Pause =>
+    case Pause ⇒
       continue = false
-    case Start =>
+    case Start ⇒
       continue = true
       calculate()
-    case ProcessCheckPoint => if (continue) calculate()
-    case unknown => //EventHandler.warning(this, "Unknown message: " + unknown)
+    case ProcessCheckPoint ⇒ if (continue) calculate()
+    case unknown           ⇒ //EventHandler.warning(this, "Unknown message: " + unknown)
   }
 
   def calculate() = {
@@ -65,8 +65,8 @@ class RayTracer extends Actor {
 
     var i = 0
     for {
-      y <- 0 until imageHeight
-      x <- 0 until imageWidth
+      y ← 0 until imageHeight
+      x ← 0 until imageWidth
     } yield {
       val (xP, yP) = sampler.nextSample2D
       buffer(i) = integrator.l(x + xP, y + yP)

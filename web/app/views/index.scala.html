@@ -1,0 +1,109 @@
+@(message: String)
+
+@main("Roygbiv") {
+
+@helper.javascriptRouter("jsRoutes")(
+routes.javascript.Application.start,
+routes.javascript.Application.stop)
+
+<script type="text/javascript" charset="utf-8">
+    var image = function(msg) {
+        $('#raytracedImage').attr('src', 'data:image/jpg;base64,' + msg);
+    }
+
+    var statistics = function(msg) {
+        var result = msg.split(",");
+        $('#layerCount').text(result[0]);
+        $('#raysCount').text(result[1]);
+        $('#raysPerSecond').text(result[2]);
+    }
+
+    function instruct(instruction) {
+        if (instruction == "#start") {
+            $("#resultText").html("<h2>Raytracing in progress</h2>");
+            disableButton("#startBtn");
+            enableButton("#stopBtn");
+            jsRoutes.controllers.Application.start().ajax({});
+        } else {
+            $("#resultText").html("<h2>Press 'Start' to raytrace an image</h2>");
+            enableButton("#startBtn");
+            disableButton("#stopBtn");
+            jsRoutes.controllers.Application.stop().ajax({});
+        }
+    }
+
+    function enableButton(buttonId) {
+        $(buttonId).removeClass('btn large primary disabled');
+        $(buttonId).addClass('btn large primary');
+    }
+
+    function disableButton(buttonId) {
+        $(buttonId).removeClass('btn large primary');
+        $(buttonId).addClass('btn large primary disabled');
+    }
+</script>
+
+<div class="topbar">
+    <div class="fill">
+        <div class="container">
+            <a class="brand" href="#">Roygbiv</a>
+            <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="inner">
+        <div class="container">
+            <h1>Bootstrap, from Twitter</h1>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="content">
+        <div class="row">
+            <div class="span10">
+                <div class="well" style="height: 600px;">
+                    <div id="resultText" align="center">
+                        <h2>Press 'Start' to raytrace an image</h2>
+                    </div>
+                    <div id="resultImage" align="center" style="height: 500px; width: 400px">
+                        <img id="raytracedImage" src="data:image/gif;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0jvb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAARe8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0CcguWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7" style="height: 570px; width: 540px">
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="well" style="height: 600px;">
+                    <h3>Roygbiv</h3>
+                    <br>
+                    <p>Press 'Start' or 'Stop' to operate the ray tracing process.</p>
+                    <br>
+                    <a href="#" id="startBtn" onclick="instruct('#start');" class="btn large primary" style="width: 150px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;START
+                    </a>
+                    <br>
+                    <a href="#" id="stopBtn" onclick="instruct('#stop');" class="btn large primary disabled" style="width: 150px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STOP
+                    </a>
+                    <br><br>
+                    <h4>Rays</h4>
+                    <div id="raysCount"></div>
+                    <h4>Rays/second</h4>
+                    <div id="raysPerSecond"></div>
+                    <h4>Layers</h4>
+                    <div id="layerCount"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- wire comet methods -->
+    <iframe src="@routes.Application.statistics" style="display:none"></iframe>
+    <iframe src="@routes.Application.image" style="display:none"></iframe>
+</div>
+}

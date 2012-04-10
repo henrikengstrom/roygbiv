@@ -1,29 +1,31 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package roygbiv.server
 
 import roygbiv.scene.json.JsonSceneLoader
 import roygbiv.scene.{ SceneLoaderOrchestrator, LoadScene, Scene }
-import akka.actor.{Props, Actor}
 import roygbiv._
+import akka.actor.{ ActorRef, Props, Actor }
 
 class Distributor extends Actor {
-  import Distributor._
+  var scene: Option[Scene] = None
+  var clients: Vector[ActorRef] = Vector()
+  final val Started = 1
+  final val Stopped = 2
 
-  // TODO : use Actors as state machine
   var state: Int = _
 
   override def preStart() {
@@ -37,36 +39,28 @@ class Distributor extends Actor {
   def receive = {
     case s: Scene ⇒
       scene = Some(s)
-      context.actorOf(Props[Aggregator]) ! s
-    case c: ClientRegistration ⇒
-      clients = c +: clients
-      context.actorFor(c.remoteAddress) !
+      context.actorFor("/user/aggregator") ! s
+    case ClientRegistration ⇒
+      println("*** ADDING WORKER CLIENT")
+      clients = sender +: clients
+      sender !
         WorkInstruction(
           context.system.settings.config.getString("akka.raytracing.aggregator.address"),
           scene.get)
-      if (state == Started) context.actorFor(c.remoteAddress) ! Start
+      if (state == Started) sender ! Start
     case Start ⇒
+      println("*** STARTING")
       state = Started
-      for (c ← clients) context.actorFor(c.remoteAddress) ! Start
-    case Pause ⇒
-      state = Paused
-      for (c ← clients) context.actorFor(c.remoteAddress) ! Pause
+      for (c ← clients) c ! Start
     case Stop ⇒
+      println("*** STOPPING")
       state = Stopped
-      for (c ← clients) context.actorFor(c.remoteAddress) ! Stop
+      for (c ← clients) c ! Stop
   }
 
   private def loadScene() = {
-    val loader = context.actorOf(Props[SceneLoaderOrchestrator])
+    val loader = context.actorOf(Props[SceneLoaderOrchestrator], "sceneLoaderOrchestrator")
     loader ! LoadScene(JsonSceneLoader.SceneType,
-      context.system.settings.config.getString("akka.raytracing.scenedefinition"))
+      context.system.settings.config.getString("akka.raytracing.scene-definition"))
   }
-}
-
-object Distributor {
-  var scene: Option[Scene] = None
-  var clients: Vector[ClientRegistration] = Vector()
-  final val Started = 1
-  final val Paused = 2
-  final val Stopped = 3
 }

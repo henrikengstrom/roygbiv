@@ -1,18 +1,18 @@
 /**
- Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package roygbiv.math
 
 case class Tuple3f(x: Float, y: Float, z: Float) {
@@ -73,7 +73,7 @@ case class Tuple3f(x: Float, y: Float, z: Float) {
 object Tuple3f {
   def apply(other: Tuple3f) = new Tuple3f(other)
 
-   def cross(t1: Tuple3f, t2: Tuple3f): Tuple3f = {
+  def cross(t1: Tuple3f, t2: Tuple3f): Tuple3f = {
     val x = (t1.y * t2.z) - (t1.z * t2.y)
     val y = (t2.x * t1.z) - (t2.z * t1.x)
     val z = (t1.x * t2.y) - (t1.y * t2.x)

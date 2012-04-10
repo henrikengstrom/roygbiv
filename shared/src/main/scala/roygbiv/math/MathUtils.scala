@@ -1,18 +1,18 @@
 /**
-  Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+ * Copyright [2011] [Henrik Engstroem, Mario Gonzalez]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package roygbiv.math
 
 import collection.mutable.ArrayBuffer
@@ -37,12 +37,12 @@ object MathUtils {
     val u = cross(up, normal).normalize
     val v = cross(normal, u)
     val w = Tuple3f((cosAzimuth * sinPolar).asInstanceOf[Float],
-                     (sinAzimuth * sinPolar).asInstanceOf[Float],
-                     cosPolar.asInstanceOf[Float])
+      (sinAzimuth * sinPolar).asInstanceOf[Float],
+      cosPolar.asInstanceOf[Float])
 
     Tuple3f((w.x * u.x) + (w.y * v.x) + (w.z * normal.x),
-            (w.x * u.y) + (w.y * v.y) + (w.z * normal.y),
-            (w.x * u.z) + (w.y * v.z) + (w.z * normal.z)).normalize
+      (w.x * u.y) + (w.y * v.y) + (w.z * normal.y),
+      (w.x * u.z) + (w.y * v.z) + (w.z * normal.z)).normalize
   }
 
   def powerHeuristic(pdf1: Float, pdf2: Float): Float = {
@@ -87,11 +87,11 @@ object MathUtils {
     (((scramble >>> 8) & 0xffffff)) / (1 << 24).asInstanceOf[Float]
   }
 
-  def shuffle[T](array: ArrayBuffer[T], count: Int,  dims: Int, rng: RandomNumberGenerator) {
-    for (i <- 0 until count) {
+  def shuffle[T](array: ArrayBuffer[T], count: Int, dims: Int, rng: RandomNumberGenerator) {
+    for (i ← 0 until count) {
       val other = i + scala.math.abs(rng.nextInt % (count - i))
 
-      for (j <- 0 until  dims) {
+      for (j ← 0 until dims) {
         val pos1 = dims * i + j
         val pos2 = dims * other + j
         val temp = array(pos1)

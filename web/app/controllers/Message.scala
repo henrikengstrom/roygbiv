@@ -1,0 +1,5 @@
+package controllers
+
+case object InitializeServerCommunication
+case object StatusCallbackMessage
+case object ImageCallbackMessage
