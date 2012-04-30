@@ -41,7 +41,6 @@ class Distributor extends Actor {
       scene = Some(s)
       context.actorFor("/user/aggregator") ! s
     case ClientRegistration ⇒
-      println("*** ADDING WORKER CLIENT")
       clients = sender +: clients
       sender !
         WorkInstruction(
@@ -49,11 +48,9 @@ class Distributor extends Actor {
           scene.get)
       if (state == Started) sender ! Start
     case Start ⇒
-      println("*** STARTING")
       state = Started
       for (c ← clients) c ! Start
     case Stop ⇒
-      println("*** STOPPING")
       state = Stopped
       for (c ← clients) c ! Stop
   }

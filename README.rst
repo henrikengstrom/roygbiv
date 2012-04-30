@@ -16,7 +16,7 @@ Requirements
 You should install the following software to get started:
 
 - GIT
-- SBT 0.11.2 (see https://github.com/harrah/xsbt/wiki for installation, getting started, etc)
+- SBT 0.11.2 (https://github.com/harrah/xsbt/wiki for installation, getting started, etc)
 - An idea that you feel comfortable with (this guide will use IntelliJ IDEA but you might as well use the Scala IDE in Eclipse)
 
 Installation Instructions
@@ -24,7 +24,7 @@ Installation Instructions
 
 1. Open a terminal window and clone the project to your disk: ``>git clone git@github.com:henrikengstrom/roygbiv.git``
 
-2. Start SBT: ``> sbt``
+2. Start SBT: ``$ sbt``
 
 After some intial logging you should see something like this::
 
@@ -51,7 +51,42 @@ While you're at it you might as well download the SBT plugin so that you can run
 Running the system
 ------------------
 
-TODO : Write new instructions
+To run the system all you have to do it open three terminal windows/tabs.
+But before that you should make sure that the mandatory Roygbiv jars are available in your Ivy repository.
+This is done with some help from SBT::
+  $ cd PROJECT_HOME
+  $ sbt
+  > publish-local
+
+Now you are ready to start rendering.
+To start the rendering server::
+  $ cd PROJECT_HOME
+  $ sbt
+  > project server
+  > run
+
+To start a client::
+  $ cd PROJECT_HOME
+  $ sbt
+  > project client
+  > run
+
+To start the web interface (and thereby also the rendering process)::
+  $ cd PROJECT_HOME/web
+  $ sbt
+  > run
+
+Now you open a browser and go to: http://localhost:9000
+Click on the ``Start`` button to start the rendering. After a while you should see the result being pushed to your browser.
+
+NOTE: The whole start/stop process is a bit brittle at the moment (to say the least).
+Should something go wrong you have to restart them in the above stated order.
+This is something that will be improved asap.
+
+NOTE2: The system is optimized to run the client(s) on a separate machine (since the client uses pinned dispatchers
+corresponding to the number of cores in the CPU). Should you run the whole setup on the same machine you may want to
+set the number of processors to less than your actual number to avoid unnecessary context switching, see
+roygbiv.client.Worker)
 
 Disclaimer
 ----------

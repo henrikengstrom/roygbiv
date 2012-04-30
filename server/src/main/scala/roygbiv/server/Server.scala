@@ -22,8 +22,6 @@ class Server extends Bootable {
   val system = ActorSystem("RaytraceServer")
   val aggregator = system.actorOf(Props[Aggregator], "aggregator")
   val distributor = system.actorOf(Props[Distributor], "distributor")
-  // TODO : remove
-  println("*** RAY TRACE SERVER STARTED ***")
 
   def startup() {
     aggregator ! "Start"

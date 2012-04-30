@@ -33,14 +33,12 @@ class Worker extends Actor {
   def receive = {
     case Initialize ⇒
       // Connect the worker with the server
-      println("*** Connecting client with server ***")
       context.actorFor(context.system.settings.config.getString("akka.roygbiv.server-work-distributor")) ! ClientRegistration
     case WorkInstruction(server, theScene) ⇒
       aggregatorServer = server
       scene = Some(theScene)
     case Start ⇒
       if (scene.isDefined) {
-        println("*** STARTING CLIENT ***")
         1 until availableProcessors foreach { i ⇒
           val worker = context.actorOf(Props[RayTracer].withDispatcher("pinned-dispatcher"), "worker" + i)
           worker ! new roygbiv.worker.Work(scene.get)
@@ -57,6 +55,5 @@ class Worker extends Actor {
 }
 
 object Worker {
-  // TODO : remove - only temp setting to not hog all CPU during development.
-  val availableProcessors = 2 // Runtime.getRuntime.availableProcessors
+  val availableProcessors = Runtime.getRuntime.availableProcessors
 }

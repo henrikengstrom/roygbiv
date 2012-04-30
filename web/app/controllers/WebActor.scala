@@ -21,28 +21,23 @@ class WebActor extends Actor {
 
   def receive = {
     case InitializeServerCommunication =>
-      println("*** INITIALIZE COMMMUNICATION")
       Aggregator ! ClientRegistration
     case StatusCallbackMessage =>
-      println("*** STATUS CALLBACK")
       lazy val channel:PushEnumerator[String] = Enumerator.imperative[String](
         onComplete = self ! channel
       )
       dataListeners = dataListeners :+ channel
       sender ! channel
     case ImageCallbackMessage =>
-      println("*** IMAGE CALLBACK")
       lazy val channel: PushEnumerator[String] = Enumerator.imperative[String](
         onComplete = self ! channel
       )
       imageListeners = imageListeners :+ channel
       sender ! channel
     case image: ImageIcon =>
-      println("*** GOT IMAGE...")
       val result = createBaseEncodedImage(image)
       imageListeners.foreach(_.push(result))
     case stats: RenderingStatistics =>
-      println("*** GOT STATUS...")
       val msg = stats.resultCounter  + "," + stats.totalRays + "," + stats.raysPerSecond
       dataListeners.foreach(_.push(msg))
   }

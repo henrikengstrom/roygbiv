@@ -56,16 +56,14 @@ class Aggregator extends Actor {
 
   def receive = {
     case s: Scene ⇒
-      println("****** SETTING SCENE IN ACTOR : " + self)
       startTime = System.nanoTime
       scene = Some(s)
       rayPayload = s.camera.screenWidth * s.camera.screenHeight
     case result: WorkResult ⇒
-      println("****** GOT RESULT FROM: " + result.workerId)
       applyResult(result)
-    case GenerateImage ⇒ generateImage()
+    case GenerateImage ⇒
+      generateImage()
     case ClientRegistration ⇒
-      println("****** ADDING WEB CLIENT: " + sender)
       clients = sender +: clients
   }
 
@@ -108,7 +106,6 @@ class Aggregator extends Actor {
   def pushResult(result: Any) = {
     def pushToClient(client: ActorRef, result: Any) = {
       try {
-        println("*** pushing result to client: " + client)
         client ! result
       } catch {
         case e: Exception ⇒
